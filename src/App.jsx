@@ -330,6 +330,15 @@ const pouchUnitCost =
 // Display according to selected unit
 
 const gummiesDisplayUnitCost =
+  unit === 'kg'
+    ? gummiesUnitCost
+    : gummiesUnitCost / 2.20462;
+
+const dryDisplayUnitCost =
+  unit === 'kg'
+    ? dryUnitCost
+    : dryUnitCost / 2.20462;
+    
 const gummiesDisplayPrice =
   convertCurrency(gummiesDisplayUnitCost);
 
