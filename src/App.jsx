@@ -379,6 +379,13 @@ const pouchProfitHigh = convertCurrency(30 - pouchUnitCost);
 const soapProfitLow = convertCurrency(12 - soapUnitCost);
 const soapProfitHigh = convertCurrency(15 - soapUnitCost);
 
+const currencySymbol =
+  currency === 'GBP'
+    ? '£'
+    : currency === 'EUR'
+    ? '€'
+    : '$';
+
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
   const total = Math.ceil(productCost + shippingCost + labelDesignCost);
@@ -632,12 +639,7 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <h3 className="font-semibold text-green-800">
     Estimated Reseller Profit
   </h3>
-const currencySymbol =
-  currency === 'GBP'
-    ? '£'
-    : currency === 'EUR'
-    ? '€'
-    : '$';
+
   {jarQty > 0 && (
     <div>
       <div>60ct Gummies Jar</div>
