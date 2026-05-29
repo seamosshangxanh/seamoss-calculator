@@ -313,6 +313,22 @@ export default function SeaMossCalculator() {
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
   const total = Math.ceil(productCost + shippingCost + labelDesignCost);
+  const [currency, setCurrency] = useState('USD');
+
+const convertCurrency = (amount) => {
+  switch (currency) {
+    case 'CAD':
+      return amount / 0.65;
+    case 'GBP':
+      return amount / 1.28;
+    case 'EUR':
+      return amount / 1.12;
+    default:
+      return amount;
+  }
+};
+
+const displayTotal = Math.ceil(convertCurrency(total));
 
   const overLimit = roundedWeight > 200;
 
@@ -341,6 +357,43 @@ export default function SeaMossCalculator() {
             Pounds (lbs)
           </button>
         </div>
+        <div className="flex gap-3 mt-4">
+  <button
+    onClick={() => setCurrency('USD')}
+    className={`px-4 py-2 rounded-xl ${
+      currency === 'USD' ? 'bg-black text-white' : 'bg-gray-200'
+    }`}
+  >
+    USD
+  </button>
+
+  <button
+    onClick={() => setCurrency('CAD')}
+    className={`px-4 py-2 rounded-xl ${
+      currency === 'CAD' ? 'bg-black text-white' : 'bg-gray-200'
+    }`}
+  >
+    CAD
+  </button>
+
+  <button
+    onClick={() => setCurrency('GBP')}
+    className={`px-4 py-2 rounded-xl ${
+      currency === 'GBP' ? 'bg-black text-white' : 'bg-gray-200'
+    }`}
+  >
+    GBP
+  </button>
+
+  <button
+    onClick={() => setCurrency('EUR')}
+    className={`px-4 py-2 rounded-xl ${
+      currency === 'EUR' ? 'bg-black text-white' : 'bg-gray-200'
+    }`}
+  >
+    EUR
+  </button>
+</div>
 
         <div className="grid md:grid-cols-2 gap-5">
           <div className="space-y-2">
@@ -480,7 +533,12 @@ export default function SeaMossCalculator() {
 
             <div className="flex justify-between border-t pt-3 font-semibold text-gray-800 text-xl">
               <span>Total</span>
-              <span>${total}</span>
+              <span>
+  {currency === 'USD' && `$${displayTotal}`}
+  {currency === 'CAD' && `$${displayTotal}`}
+  {currency === 'GBP' && `£${displayTotal}`}
+  {currency === 'EUR' && `€${displayTotal}`}
+</span>
             </div>
           </div>
 
@@ -497,7 +555,10 @@ export default function SeaMossCalculator() {
             </div>
           ) : (
             <div className="text-6xl font-bold tracking-tight">
-              ${total} USD
+              {currency === 'USD' && `$${displayTotal} USD`}
+{currency === 'CAD' && `$${displayTotal} CAD`}
+{currency === 'GBP' && `£${displayTotal} GBP`}
+{currency === 'EUR' && `€${displayTotal} EUR`}
             </div>
                       )}
           </div>
