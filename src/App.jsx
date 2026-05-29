@@ -310,14 +310,35 @@ export default function SeaMossCalculator() {
   const jarLanded = jarCost + allocateShipping(jarWeight);
   const pouchLanded = pouchCost + allocateShipping(pouchWeight);
   // Unit landed cost
+  // Landed cost per unit
+
+const gummiesUnitCost =
+  gummiesKg > 0 ? gummiesLanded / gummiesKg : 0;
+
+const dryUnitCost =
+  dryKg > 0 ? dryLanded / dryKg : 0;
+
+const soapUnitCost =
+  soapQty > 0 ? soapLanded / soapQty : 0;
+
 const jarUnitCost =
   jarQty > 0 ? jarLanded / jarQty : 0;
 
 const pouchUnitCost =
   pouchQty > 0 ? pouchLanded / pouchQty : 0;
 
-const soapUnitCost =
-  soapQty > 0 ? soapLanded / soapQty : 0;
+// Display according to selected unit
+
+const gummiesDisplayUnitCost =
+  unit === 'kg'
+    ? gummiesUnitCost
+    : gummiesUnitCost / 2.20462;
+
+const dryDisplayUnitCost =
+  unit === 'kg'
+    ? dryUnitCost
+    : dryUnitCost / 2.20462;
+
 
 // Estimated reseller profit
 const jarProfitLow = 30 - jarUnitCost;
@@ -511,14 +532,18 @@ const displayTotal = Math.ceil(convertCurrency(total));
             {gummiesKg > 0 && (
   <div className="flex justify-between">
     <span>Sea Moss Gummies</span>
-    <span>${13.4.toFixed(2)} / kg</span>
+    <span>
+  ${gummiesDisplayUnitCost.toFixed(2)} / {unit}
+</span>
   </div>
 )}
 
             {dryKg > 0 && (
   <div className="flex justify-between">
     <span>Gold Sea Moss</span>
-    <span>${12.14.toFixed(2)} / kg</span>
+    <span>
+  ${dryDisplayUnitCost.toFixed(2)} / {unit}
+</span>
   </div>
 )}
 
