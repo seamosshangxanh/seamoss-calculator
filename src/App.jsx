@@ -309,6 +309,25 @@ export default function SeaMossCalculator() {
   const soapLanded = soapCost + allocateShipping(soapWeight);
   const jarLanded = jarCost + allocateShipping(jarWeight);
   const pouchLanded = pouchCost + allocateShipping(pouchWeight);
+  // Unit landed cost
+const jarUnitCost =
+  jarQty > 0 ? jarLanded / jarQty : 0;
+
+const pouchUnitCost =
+  pouchQty > 0 ? pouchLanded / pouchQty : 0;
+
+const soapUnitCost =
+  soapQty > 0 ? soapLanded / soapQty : 0;
+
+// Estimated reseller profit
+const jarProfitLow = 30 - jarUnitCost;
+const jarProfitHigh = 35 - jarUnitCost;
+
+const pouchProfitLow = 25 - pouchUnitCost;
+const pouchProfitHigh = 30 - pouchUnitCost;
+
+const soapProfitLow = 12 - soapUnitCost;
+const soapProfitHigh = 15 - soapUnitCost;
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
@@ -490,39 +509,39 @@ const displayTotal = Math.ceil(convertCurrency(total));
 
           <div className="space-y-3 text-lg">
             {gummiesKg > 0 && (
-              <div className="flex justify-between">
-                <span>Sea Moss Gummies</span>
-                <span>${Math.ceil(gummiesLanded)}</span>
-              </div>
-            )}
+  <div className="flex justify-between">
+    <span>Sea Moss Gummies</span>
+    <span>${13.4.toFixed(2)} / kg</span>
+  </div>
+)}
 
             {dryKg > 0 && (
-              <div className="flex justify-between">
-                <span>Dry Sea Moss</span>
-                <span>${Math.ceil(dryLanded)}</span>
-              </div>
-            )}
+  <div className="flex justify-between">
+    <span>Gold Sea Moss</span>
+    <span>${12.14.toFixed(2)} / kg</span>
+  </div>
+)}
 
             {soapQty > 0 && (
-              <div className="flex justify-between">
-                <span>Sea Moss Soap</span>
-                <span>${Math.ceil(soapLanded)}</span>
-              </div>
-            )}
+  <div className="flex justify-between">
+    <span>Sea Moss Soap</span>
+    <span>${soapUnitCost.toFixed(2)} / bar</span>
+  </div>
+)}
 
-            {jarQty > 0 && (
-              <div className="flex justify-between">
-                <span>60ct Gummies Plastic Jar</span>
-                <span>${Math.ceil(jarLanded)}</span>
-              </div>
-            )}
+           {jarQty > 0 && (
+  <div className="flex justify-between">
+    <span>60ct Gummies Jar</span>
+    <span>${jarUnitCost.toFixed(2)} / jar</span>
+  </div>
+)}
 
-            {pouchQty > 0 && (
-              <div className="flex justify-between">
-                <span>60ct Gummies Pouch</span>
-                <span>${Math.ceil(pouchLanded)}</span>
-              </div>
-            )}
+           {pouchQty > 0 && (
+  <div className="flex justify-between">
+    <span>60ct Gummies Pouch</span>
+    <span>${pouchUnitCost.toFixed(2)} / pouch</span>
+  </div>
+)}
 
             {form.labelDesign && (
               <div className="flex justify-between">
@@ -540,6 +559,38 @@ const displayTotal = Math.ceil(convertCurrency(total));
   {currency === 'EUR' && `€${displayTotal}`}
 </span>
             </div>
+            <div className="bg-green-50 border border-green-200 rounded-2xl p-4 space-y-3">
+  <h3 className="font-semibold text-green-800">
+    Estimated Reseller Profit
+  </h3>
+
+  {jarQty > 0 && (
+    <div>
+      <div>60ct Gummies Jar</div>
+      <div className="text-green-700">
+        ${jarProfitLow.toFixed(2)} - ${jarProfitHigh.toFixed(2)} profit per jar
+      </div>
+    </div>
+  )}
+
+  {pouchQty > 0 && (
+    <div>
+      <div>60ct Gummies Pouch</div>
+      <div className="text-green-700">
+        ${pouchProfitLow.toFixed(2)} - ${pouchProfitHigh.toFixed(2)} profit per pouch
+      </div>
+    </div>
+  )}
+
+  {soapQty > 0 && (
+    <div>
+      <div>Sea Moss Soap</div>
+      <div className="text-green-700">
+        ${soapProfitLow.toFixed(2)} - ${soapProfitHigh.toFixed(2)} profit per bar
+      </div>
+    </div>
+  )}
+</div>
           </div>
 
           {roundedWeight > 20 && (
