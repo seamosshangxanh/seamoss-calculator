@@ -232,7 +232,12 @@ export default function SeaMossCalculator() {
     soap: '',
     jar: '',
     pouch: '',
-    labelDesign: false
+    labelDesign: false,
+    flavors: [],
+  soapScents: [],
+  jarLids: [],
+  pouchColors: [],
+
   });
 
   const convertToKg = (value) => {
@@ -384,9 +389,39 @@ const currencySymbol =
     ? '£'
     : currency === 'EUR'
     ? '€'
-    : '$';
+    : ' $';
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
+
+  const gummyFlavors = [
+  'Passion Fruit',
+  'Mango',
+  'Pineapple',
+  'Ginger',
+  'Soursop',
+  'Berry',
+  'Orange',
+  'Pandan',
+  'Spirulina',
+  'Pea Flower - Mint',
+];
+
+const soapScentsList = [
+  'Lemongrass - Turmeric',
+  'Moringa - Mint - Green Tea',
+  'Honey - Turmeric',
+];
+
+const lidOptions = [
+  'Wooden Lid',
+  'Black Lid',
+];
+
+const pouchColorsList = [
+  'Silver',
+  'Brown Kraft',
+  'White Kraft',
+];
 
   const total = Math.ceil(productCost + shippingCost + labelDesignCost);
   
@@ -465,6 +500,7 @@ const displayTotal = Math.ceil(convertCurrency(total));
             <label className="font-semibold">
               Sea Moss Gummies ({unit})
             </label>
+            
             <input
               type="number"
               value={form.gummies}
@@ -476,7 +512,7 @@ const displayTotal = Math.ceil(convertCurrency(total));
 
           <div className="space-y-2">
             <label className="font-semibold">
-              Dry Sea Moss ({unit})
+              Gold Sea Moss ({unit})
             </label>
             <input
               type="number"
@@ -582,10 +618,10 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <div className="flex justify-between">
     <span>Sea Moss Soap</span>
     <span>
-  {currency === 'USD' && `$${soapDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'CAD' && `$${soapDisplayPrice.toFixed(2)} CAD / ${unit}`}
-{currency === 'GBP' && `£${soapDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'EUR' && `€${soapDisplayPrice.toFixed(2)} / ${unit}`}
+  {currency === 'USD' && `$${soapDisplayPrice.toFixed(2)} / bar`}
+{currency === 'CAD' && `$${soapDisplayPrice.toFixed(2)} CAD / bar`}
+{currency === 'GBP' && `£${soapDisplayPrice.toFixed(2)} / bar`}
+{currency === 'EUR' && `€${soapDisplayPrice.toFixed(2)} / bar`}
 </span>
   </div>
 )}
@@ -594,10 +630,10 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <div className="flex justify-between">
     <span>60ct Gummies Jar</span>
     <span>
-  {currency === 'USD' && `$${jarDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'CAD' && `$${jarDisplayPrice.toFixed(2)} CAD / ${unit}`}
-{currency === 'GBP' && `£${jarDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'EUR' && `€${jarDisplayPrice.toFixed(2)} / ${unit}`}
+  {currency === 'USD' && `$${jarDisplayPrice.toFixed(2)} / jar`}
+{currency === 'CAD' && `$${jarDisplayPrice.toFixed(2)} CAD / jar`}
+{currency === 'GBP' && `£${jarDisplayPrice.toFixed(2)} / jar`}
+{currency === 'EUR' && `€${jarDisplayPrice.toFixed(2)} / jar`}
 </span>
   </div>
 )}
@@ -606,10 +642,10 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <div className="flex justify-between">
     <span>60ct Gummies Pouch</span>
     <span>
-  {currency === 'USD' && `$${pouchDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'CAD' && `$${pouchDisplayPrice.toFixed(2)} CAD / ${unit}`}
-{currency === 'GBP' && `£${pouchDisplayPrice.toFixed(2)} / ${unit}`}
-{currency === 'EUR' && `€${pouchDisplayPrice.toFixed(2)} / ${unit}`}
+  {currency === 'USD' && `$${pouchDisplayPrice.toFixed(2)} / pouch`}
+{currency === 'CAD' && `$${pouchDisplayPrice.toFixed(2)} CAD / pouch`}
+{currency === 'GBP' && `£${pouchDisplayPrice.toFixed(2)} / pouch`}
+{currency === 'EUR' && `€${pouchDisplayPrice.toFixed(2)} / pouch`}
 </span>
   </div>
 )}
@@ -679,12 +715,46 @@ const displayTotal = Math.ceil(convertCurrency(total));
               Please contact us for orders above 200kg
             </div>
           ) : (
-            <div className="text-6xl font-bold tracking-tight">
-              {currency === 'USD' && `$${displayTotal} USD`}
-{currency === 'CAD' && `$${displayTotal} CAD`}
-{currency === 'GBP' && `£${displayTotal} GBP`}
-{currency === 'EUR' && `€${displayTotal} EUR`}
-            </div>
+            <>
+              <div className="text-6xl font-bold tracking-tight">
+                {currency === 'USD' && `$${displayTotal} USD`}
+                {currency === 'CAD' && `$${displayTotal} CAD`}
+                {currency === 'GBP' && `£${displayTotal} GBP`}
+                {currency === 'EUR' && `€${displayTotal} EUR`}
+              </div>
+
+              <div className="mt-8 border rounded-3xl p-6 bg-white">
+                <h2 className="text-2xl font-bold mb-4">
+                  Product Options
+                </h2>
+
+                <div className="mb-6">
+                  <h3 className="font-semibold mb-2">Gummies Flavors</h3>
+
+                  <p className="text-sm text-gray-500 mb-3">No flavor MOQ. Mix any ratio.</p>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {[
+                      'Passion Fruit',
+                      'Mango',
+                      'Pineapple',
+                      'Ginger',
+                      'Soursop',
+                      'Berry',
+                      'Orange',
+                      'Pandan',
+                      'Spirulina',
+                      'Pea Flower - Mint',
+                    ].map((flavor) => (
+                      <label key={flavor} className="flex gap-2">
+                        <input type="checkbox" />
+                        {flavor}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </>
                       )}
           </div>
         </div>
