@@ -330,6 +330,20 @@ const pouchUnitCost =
 // Display according to selected unit
 
 const gummiesDisplayUnitCost =
+const gummiesDisplayPrice =
+  convertCurrency(gummiesDisplayUnitCost);
+
+const dryDisplayPrice =
+  convertCurrency(dryDisplayUnitCost);
+
+const soapDisplayPrice =
+  convertCurrency(soapUnitCost);
+
+const jarDisplayPrice =
+  convertCurrency(jarUnitCost);
+
+const pouchDisplayPrice =
+  convertCurrency(pouchUnitCost);
   unit === 'kg'
     ? gummiesUnitCost
     : gummiesUnitCost / 2.20462;
@@ -341,14 +355,14 @@ const dryDisplayUnitCost =
 
 
 // Estimated reseller profit
-const jarProfitLow = 30 - jarUnitCost;
-const jarProfitHigh = 35 - jarUnitCost;
+const jarProfitLow = convertCurrency(30 - jarUnitCost);
+const jarProfitHigh = convertCurrency(35 - jarUnitCost);
 
-const pouchProfitLow = 25 - pouchUnitCost;
-const pouchProfitHigh = 30 - pouchUnitCost;
+const pouchProfitLow = convertCurrency(25 - pouchUnitCost);
+const pouchProfitHigh = convertCurrency(30 - pouchUnitCost);
 
-const soapProfitLow = 12 - soapUnitCost;
-const soapProfitHigh = 15 - soapUnitCost;
+const soapProfitLow = convertCurrency(12 - soapUnitCost);
+const soapProfitHigh = convertCurrency(15 - soapUnitCost);
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
@@ -533,7 +547,10 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <div className="flex justify-between">
     <span>Sea Moss Gummies</span>
     <span>
-  ${gummiesDisplayUnitCost.toFixed(2)} / {unit}
+  {currency === 'USD' && `$${gummiesDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'CAD' && `$${gummiesDisplayPrice.toFixed(2)} CAD / ${unit}`}
+{currency === 'GBP' && `£${gummiesDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'EUR' && `€${gummiesDisplayPrice.toFixed(2)} / ${unit}`}
 </span>
   </div>
 )}
@@ -542,7 +559,10 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <div className="flex justify-between">
     <span>Gold Sea Moss</span>
     <span>
-  ${dryDisplayUnitCost.toFixed(2)} / {unit}
+  {currency === 'USD' && `$${dryDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'CAD' && `$${dryDisplayPrice.toFixed(2)} CAD / ${unit}`}
+{currency === 'GBP' && `£${dryDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'EUR' && `€${dryDisplayPrice.toFixed(2)} / ${unit}`}
 </span>
   </div>
 )}
@@ -550,28 +570,48 @@ const displayTotal = Math.ceil(convertCurrency(total));
             {soapQty > 0 && (
   <div className="flex justify-between">
     <span>Sea Moss Soap</span>
-    <span>${soapUnitCost.toFixed(2)} / bar</span>
+    <span>
+  {currency === 'USD' && `$${soapDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'CAD' && `$${soapDisplayPrice.toFixed(2)} CAD / ${unit}`}
+{currency === 'GBP' && `£${soapDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'EUR' && `€${soapDisplayPrice.toFixed(2)} / ${unit}`}
+</span>
   </div>
 )}
 
            {jarQty > 0 && (
   <div className="flex justify-between">
     <span>60ct Gummies Jar</span>
-    <span>${jarUnitCost.toFixed(2)} / jar</span>
+    <span>
+  {currency === 'USD' && `$${jarDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'CAD' && `$${jarDisplayPrice.toFixed(2)} CAD / ${unit}`}
+{currency === 'GBP' && `£${jarDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'EUR' && `€${jarDisplayPrice.toFixed(2)} / ${unit}`}
+</span>
   </div>
 )}
 
            {pouchQty > 0 && (
   <div className="flex justify-between">
     <span>60ct Gummies Pouch</span>
-    <span>${pouchUnitCost.toFixed(2)} / pouch</span>
+    <span>
+  {currency === 'USD' && `$${pouchDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'CAD' && `$${pouchDisplayPrice.toFixed(2)} CAD / ${unit}`}
+{currency === 'GBP' && `£${pouchDisplayPrice.toFixed(2)} / ${unit}`}
+{currency === 'EUR' && `€${pouchDisplayPrice.toFixed(2)} / ${unit}`}
+</span>
   </div>
 )}
 
             {form.labelDesign && (
               <div className="flex justify-between">
                 <span>Label Design Service</span>
-                <span>$75</span>
+                <span>
+  {currency === 'USD' && `$75`}
+  {currency === 'CAD' && `$75 CAD`}
+  {currency === 'GBP' && `£75`}
+  {currency === 'EUR' && `€75`}
+</span>
               </div>
             )}
 
