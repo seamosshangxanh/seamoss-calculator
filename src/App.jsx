@@ -225,6 +225,7 @@ export default function SeaMossCalculator() {
   };
 
   const [unit, setUnit] = useState('lbs');
+  const [currency, setCurrency] = useState('USD');
   const [form, setForm] = useState({
     gummies: '',
     dry: '',
@@ -338,7 +339,18 @@ const dryDisplayUnitCost =
   unit === 'kg'
     ? dryUnitCost
     : dryUnitCost / 2.20462;
-    
+const convertCurrency = (amount) => {
+  switch (currency) {
+    case 'CAD':
+      return amount / 0.65;
+    case 'GBP':
+      return amount / 1.28;
+    case 'EUR':
+      return amount / 1.12;
+    default:
+      return amount;
+  }
+};
 const gummiesDisplayPrice =
   convertCurrency(gummiesDisplayUnitCost);
 
@@ -353,14 +365,8 @@ const jarDisplayPrice =
 
 const pouchDisplayPrice =
   convertCurrency(pouchUnitCost);
-  unit === 'kg'
-    ? gummiesUnitCost
-    : gummiesUnitCost / 2.20462;
 
-const dryDisplayUnitCost =
-  unit === 'kg'
-    ? dryUnitCost
-    : dryUnitCost / 2.20462;
+
 
 
 // Estimated reseller profit
@@ -376,20 +382,9 @@ const soapProfitHigh = convertCurrency(15 - soapUnitCost);
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
   const total = Math.ceil(productCost + shippingCost + labelDesignCost);
-  const [currency, setCurrency] = useState('USD');
+  
 
-const convertCurrency = (amount) => {
-  switch (currency) {
-    case 'CAD':
-      return amount / 0.65;
-    case 'GBP':
-      return amount / 1.28;
-    case 'EUR':
-      return amount / 1.12;
-    default:
-      return amount;
-  }
-};
+
 
 const displayTotal = Math.ceil(convertCurrency(total));
 
@@ -637,13 +632,17 @@ const displayTotal = Math.ceil(convertCurrency(total));
   <h3 className="font-semibold text-green-800">
     Estimated Reseller Profit
   </h3>
-
+const currencySymbol =
+  currency === 'GBP'
+    ? '£'
+    : currency === 'EUR'
+    ? '€'
+    : '$';
   {jarQty > 0 && (
     <div>
       <div>60ct Gummies Jar</div>
       <div className="text-green-700">
-        ${jarProfitLow.toFixed(2)} - ${jarProfitHigh.toFixed(2)} profit per jar
-      </div>
+{currencySymbol}{jarProfitLow.toFixed(2)} - {currencySymbol}{jarProfitHigh.toFixed(2)}      </div>
     </div>
   )}
 
@@ -651,8 +650,7 @@ const displayTotal = Math.ceil(convertCurrency(total));
     <div>
       <div>60ct Gummies Pouch</div>
       <div className="text-green-700">
-        ${pouchProfitLow.toFixed(2)} - ${pouchProfitHigh.toFixed(2)} profit per pouch
-      </div>
+{currencySymbol}{pouchProfitLow.toFixed(2)} - {currencySymbol}{pouchProfitHigh.toFixed(2)}      </div>
     </div>
   )}
 
@@ -660,7 +658,7 @@ const displayTotal = Math.ceil(convertCurrency(total));
     <div>
       <div>Sea Moss Soap</div>
       <div className="text-green-700">
-        ${soapProfitLow.toFixed(2)} - ${soapProfitHigh.toFixed(2)} profit per bar
+        {currencySymbol}{soapProfitLow.toFixed(2)} - {currencySymbol}{soapProfitHigh.toFixed(2)} profit per bar
       </div>
     </div>
   )}
