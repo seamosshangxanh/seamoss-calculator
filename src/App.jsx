@@ -384,7 +384,7 @@ const currencySymbol =
     ? '£'
     : currency === 'EUR'
     ? '€'
-    : '$';
+    : 'CA$';
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
