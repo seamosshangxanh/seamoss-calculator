@@ -233,10 +233,12 @@ export default function SeaMossCalculator() {
     jar: '',
     pouch: '',
     labelDesign: false,
-    flavors: [],
+  bulkFlavors: [],
+jarFlavors: [],
+pouchFlavors: [],
   soapScents: [],
-  jarLids: [],
-  pouchColors: [],
+  jarLid: '',
+pouchColor: '',
 
   });
 
@@ -393,35 +395,7 @@ const currencySymbol =
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
-  const gummyFlavors = [
-  'Passion Fruit',
-  'Mango',
-  'Pineapple',
-  'Ginger',
-  'Soursop',
-  'Berry',
-  'Orange',
-  'Pandan',
-  'Spirulina',
-  'Pea Flower - Mint',
-];
-
-const soapScentsList = [
-  'Lemongrass - Turmeric',
-  'Moringa - Mint - Green Tea',
-  'Honey - Turmeric',
-];
-
-const lidOptions = [
-  'Wooden Lid',
-  'Black Lid',
-];
-
-const pouchColorsList = [
-  'Silver',
-  'Brown Kraft',
-  'White Kraft',
-];
+ 
 
   const total = Math.ceil(productCost + shippingCost + labelDesignCost);
   
@@ -432,52 +406,152 @@ const displayTotal = Math.ceil(convertCurrency(total));
 
   const overLimit = roundedWeight > 200;
 
+  const hasOrder =
+  gummiesKg > 0 ||
+  dryKg > 0 ||
+  soapQty > 0 ||
+  jarQty > 0 ||
+  pouchQty > 0;
+
   const buildOrderMessage = () => {
+let msg = `Hello Larry, I built an order:\n\n`
 
-return `
-Hello Larry,
+if(form.gummies){
 
-I built an order:
+msg +=
+`Sea Moss Gummies:
+${form.gummies} ${unit}
 
-Currency:
-${currency}
+`
 
-Sea Moss Gummies:
-${form.gummies || 0} ${unit}
+if(form.bulkFlavors.length){
 
-Flavors:
-${form.flavors.join(', ') || 'None'}
+msg +=
+`Flavors:
+${form.bulkFlavors.join(', ')}
 
-Gold Sea Moss:
-${form.dry || 0} ${unit}
+`
 
-Sea Moss Soap:
-${form.soap || 0}
+}
 
-Scents:
-${form.soapScents?.join(', ') || 'None'}
+}
 
-60ct Gummies Jar:
-${form.jar || 0}
 
-Lid:
-${form.jarLid || 'Not selected'}
 
-60ct Gummies Pouch:
-${form.pouch || 0}
+if(form.dry){
 
-Pouch Color:
-${form.pouchColor || 'Not selected'}
+msg +=
+`Gold Sea Moss:
+${form.dry} ${unit}
 
-Label Design:
-${form.labelDesign ? 'Yes' : 'No'}
+`
 
-Estimated Total:
+}
+
+if(form.soap){
+
+msg +=
+`Sea Moss Soap:
+${form.soap}
+
+`
+
+if(form.soapScents.length){
+
+msg +=
+`Scents:
+${form.soapScents.join(', ')}
+
+`
+
+}
+
+}
+
+if(form.jar){
+
+msg +=
+`60ct Gummies Jar:
+${form.jar}
+
+`
+
+if(form.jarFlavors.length){
+
+msg +=
+`Flavors:
+${form.jarFlavors.join(', ')}
+
+`
+
+}
+
+if(form.jarLid){
+
+msg +=
+`Lid:
+${form.jarLid}
+
+`
+
+}
+
+
+
+
+
+}
+
+if(form.pouch){
+
+msg +=
+`60ct Gummies Pouch:
+${form.pouch}
+
+`
+
+if(form.pouchFlavors.length){
+
+msg +=
+`Flavors:
+${form.pouchFlavors.join(', ')}
+
+`
+
+}
+
+if(form.pouchColor){
+
+msg +=
+`Pouch Color:
+${form.pouchColor}
+
+`
+
+}
+
+}
+
+
+
+if(form.labelDesign){
+
+msg +=
+`Label Design:
+Yes
+
+`
+
+}
+
+msg +=
+`Estimated Total:
 ${currencySymbol}${displayTotal}
 
 Questions:
-`;
+`
 
+return msg
 }
 
   return (
@@ -504,7 +578,7 @@ US, UK, Canada, EU, Dubai, Saudi Arabia
 
 </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-center">
           <button
             onClick={() => setUnit('kg')}
             className={`px-5 py-2 rounded-2xl ${unit === 'kg' ? 'bg-black text-white' : 'bg-gray-200'}`}
@@ -519,7 +593,7 @@ US, UK, Canada, EU, Dubai, Saudi Arabia
             Pounds (lbs)
           </button>
         </div>
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-3 mt-4 justify-center">
   <button
     onClick={() => setCurrency('USD')}
     className={`px-4 py-2 rounded-xl ${
@@ -560,8 +634,13 @@ US, UK, Canada, EU, Dubai, Saudi Arabia
         <div className="grid md:grid-cols-2 gap-5">
           <div className="space-y-2">
             <label className="font-semibold">
-              Sea Moss Gummies ({unit})
-            </label>
+  Sea Moss Gummies ({unit})
+
+  <div className="text-sm font-normal text-gray-500">
+Bulk order • Packed in bags
+</div>
+
+</label>
             
             <input
               type="number"
@@ -727,10 +806,10 @@ US, UK, Canada, EU, Dubai, Saudi Arabia
             <div className="flex justify-between border-t pt-3 font-semibold text-gray-800 text-xl">
               <span>Total</span>
               <span>
-  {currency === 'USD' && `$${displayTotal}`}
-  {currency === 'CAD' && `$${displayTotal}`}
-  {currency === 'GBP' && `£${displayTotal}`}
-  {currency === 'EUR' && `€${displayTotal}`}
+  {hasOrder && currency === 'USD' && `$${displayTotal}`}
+{hasOrder && currency === 'CAD' && `$${displayTotal}`}
+{hasOrder && currency === 'GBP' && `£${displayTotal}`}
+{hasOrder && currency === 'EUR' && `€${displayTotal}`}
 </span>
             </div>
             <div className="bg-green-50 border border-green-200 rounded-2xl p-4 space-y-3">
@@ -777,14 +856,20 @@ US, UK, Canada, EU, Dubai, Saudi Arabia
     Please contact us for orders above 200kg
   </div>
 ) : (
-  <div className="text-6xl font-bold tracking-tight">
+  
+ <div className="text-6xl font-bold tracking-tight">
 
-    {currency === 'USD' && `$${displayTotal} USD`}
-    {currency === 'CAD' && `$${displayTotal} CAD`}
-    {currency === 'GBP' && `£${displayTotal} GBP`}
-    {currency === 'EUR' && `€${displayTotal} EUR`}
+{hasOrder ? (
+<>
+{currency === 'USD' && `$${displayTotal} USD`}
+{currency === 'CAD' && `$${displayTotal} CAD`}
+{currency === 'GBP' && `£${displayTotal} GBP`}
+{currency === 'EUR' && `€${displayTotal} EUR`}
+</>
+) : null}
 
-  </div>
+</div>
+
 )}
               <div className="mt-8 border rounded-3xl p-5 md:p-8 bg-white">
 
@@ -793,12 +878,19 @@ Product Options
 </h2>
 
 
-                <div className="mb-6">
-                  <h3 className="font-semibold mb-2">Gummies Flavors</h3>
+{gummiesKg > 0 && (
 
-                  <p className="text-sm text-gray-500 mb-3">No flavor MOQ. Mix any ratio.</p>
+<div className="mb-6">
 
-                  <div className="flex flex-wrap gap-2 justify-center">
+<h3>
+Bulk Flavors
+</h3>
+
+<p className="text-sm text-gray-500 mb-3">
+No flavor MOQ. Mix any ratio.
+</p>
+
+<div className="flex flex-wrap gap-2 justify-center">
 
 {[
 'Passion Fruit',
@@ -810,49 +902,259 @@ Product Options
 'Orange',
 'Pandan',
 'Spirulina',
-'Pea Flower - Mint',
+'Pea Flower - Mint'
 ].map((flavor)=>(
 
 <button
 type="button"
 key={flavor}
+
 onClick={()=>{
-if(form.flavors.includes(flavor)){
+
+if(form.bulkFlavors.includes(flavor)){
+
 setForm({
 ...form,
-flavors: form.flavors.filter(
+bulkFlavors:
+form.bulkFlavors.filter(
 f=>f!==flavor
 )
+
 })
+
 }else{
+
 setForm({
+
 ...form,
-flavors:[
-...form.flavors,
+
+bulkFlavors:[
+...form.bulkFlavors,
 flavor
 ]
+
 })
+
 }
+
 }}
 
 className={
-form.flavors.includes(flavor)
-? "px-4 py-2 rounded-full text-sm border transition bg-black text-white border-black"
-: "px-4 py-2 rounded-full text-sm border transition bg-white border-gray-300"
+
+form.bulkFlavors.includes(flavor)
+
+?
+
+"px-4 py-2 rounded-full text-sm border transition bg-black text-white border-black"
+
+:
+
+"px-4 py-2 rounded-full text-sm border transition bg-white border-gray-300"
+
 }
 
 >
+
 {flavor}
+
 </button>
 
 ))}
 
+</div>
 
 </div>
 
+)}
+
+
+
+{jarQty > 0 && (
+
 <div className="mb-6">
 
-<h3 className="font-semibold mb-2 mt-8 text-center">
+<h3 className="font-semibold mb-2">
+Jar Flavors
+</h3>
+
+<p className="text-sm text-gray-500 mb-3">
+No flavor MOQ. Mix any ratio.
+</p>
+
+<div className="flex flex-wrap gap-2 justify-center">
+
+{[
+'Passion Fruit',
+'Mango',
+'Pineapple',
+'Ginger',
+'Soursop',
+'Berry',
+'Orange',
+'Pandan',
+'Spirulina',
+'Pea Flower - Mint'
+].map((flavor)=>(
+
+<button
+type="button"
+key={flavor}
+
+onClick={()=>{
+
+if(form.jarFlavors.includes(flavor)){
+
+setForm({
+...form,
+jarFlavors:
+form.jarFlavors.filter(
+f=>f!==flavor
+)
+
+})
+
+}else{
+
+setForm({
+
+...form,
+
+jarFlavors:[
+...form.jarFlavors,
+flavor
+]
+
+})
+
+}
+
+}}
+
+className={
+
+form.jarFlavors.includes(flavor)
+
+?
+
+"px-4 py-2 rounded-full text-sm border transition bg-black text-white border-black"
+
+:
+
+"px-4 py-2 rounded-full text-sm border transition bg-white border-gray-300"
+
+}
+
+>
+
+{flavor}
+
+</button>
+
+))}
+
+</div>
+
+</div>
+
+)}
+
+{pouchQty > 0 && (
+
+
+
+<div className="mb-6">
+
+<h3 className="font-semibold mb-2">
+Pouch Flavors
+</h3>
+
+<p className="text-sm text-gray-500 mb-3">
+No flavor MOQ. Mix any ratio.
+</p>
+
+<div className="flex flex-wrap gap-2 justify-center">
+
+{[
+'Passion Fruit',
+'Mango',
+'Pineapple',
+'Ginger',
+'Soursop',
+'Berry',
+'Orange',
+'Pandan',
+'Spirulina',
+'Pea Flower - Mint'
+].map((flavor)=>(
+
+<button
+type="button"
+key={flavor}
+
+onClick={()=>{
+
+if(form.pouchFlavors.includes(flavor)){
+
+setForm({
+...form,
+pouchFlavors:
+form.pouchFlavors.filter(
+f=>f!==flavor
+)
+
+})
+
+}else{
+
+setForm({
+
+...form,
+
+pouchFlavors:[
+...form.pouchFlavors,
+flavor
+]
+
+})
+
+}
+
+}}
+
+className={
+
+form.pouchFlavors.includes(flavor)
+
+?
+
+"px-4 py-2 rounded-full text-sm border transition bg-black text-white border-black"
+
+:
+
+"px-4 py-2 rounded-full text-sm border transition bg-white border-gray-300"
+
+}
+
+>
+
+{flavor}
+
+</button>
+
+))}
+
+</div>
+
+
+</div>
+
+)}
+
+{soapQty > 0 && (
+
+<div className="mb-6">
+
+<h3>
 Soap Scents
 </h3>
 
@@ -914,9 +1216,13 @@ form.soapScents.includes(scent)
 
 </div>
 
-<div className="mb-6">
+)}
 
-<h3 className="font-semibold mb-2">
+{jarQty > 0 && (
+
+<div className="mb-6 mt-8">
+
+<h3 className="font-semibold mb-2 text-center">
 Jar Lid Color
 </h3>
 
@@ -954,8 +1260,11 @@ form.jarLid===lid
 </div>
 
 </div>
+)}
 
-<div>
+{pouchQty > 0 && (
+
+<div className="mb-6">
 
 <h3 className="font-semibold mb-2">
 Pouch Color
@@ -995,6 +1304,10 @@ form.pouchColor===color
 ))}
 
 </div>
+
+</div>
+
+)}
 
 <div className="mt-10">
 
@@ -1050,7 +1363,7 @@ window.open(
 )
 
 alert(
-"Order copied. Paste into Instagram DM."
+"Order copied. Open Instagram DM and paste."
 )
 
 }}
@@ -1065,6 +1378,10 @@ rounded-full
 >
 
 Instagram DM
+<br />
+<span className="text-xs opacity-80">
+Paste Message
+</span>
 
 </button>
 
@@ -1088,7 +1405,6 @@ Message before payment.
                       
           </div>
         </div>
-      </div>
-    </div>
+      
   )
 }
