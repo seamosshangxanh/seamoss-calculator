@@ -432,15 +432,77 @@ const displayTotal = Math.ceil(convertCurrency(total));
 
   const overLimit = roundedWeight > 200;
 
+  const buildOrderMessage = () => {
+
+return `
+Hello Larry,
+
+I built an order:
+
+Currency:
+${currency}
+
+Sea Moss Gummies:
+${form.gummies || 0} ${unit}
+
+Flavors:
+${form.flavors.join(', ') || 'None'}
+
+Gold Sea Moss:
+${form.dry || 0} ${unit}
+
+Sea Moss Soap:
+${form.soap || 0}
+
+Scents:
+${form.soapScents?.join(', ') || 'None'}
+
+60ct Gummies Jar:
+${form.jar || 0}
+
+Lid:
+${form.jarLid || 'Not selected'}
+
+60ct Gummies Pouch:
+${form.pouch || 0}
+
+Pouch Color:
+${form.pouchColor || 'Not selected'}
+
+Label Design:
+${form.labelDesign ? 'Yes' : 'No'}
+
+Estimated Total:
+${currencySymbol}${displayTotal}
+
+Questions:
+`;
+
+}
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-8 space-y-8">
-        <div>
-          <h1 className="text-4xl font-bold">Larry Sea Moss / Sea Moss Hang Xanh</h1>
-          <p className="text-gray-500 mt-2">
-            Price included shipping already to US, UK, Canada, EU, Dubai, Saudi Arabia
-          </p>
-        </div>
+        <div className="flex flex-col items-center text-center">
+
+<h1 className="text-5xl font-bold leading-tight">
+Larry Sea Moss
+</h1>
+
+<p className="text-2xl font-semibold text-gray-600 mt-2">
+Wholesale Calculator
+</p>
+
+<p className="text-gray-500 mt-2">
+Build your order • Estimate landed cost • Request quote
+</p>
+
+<p className="text-red-600 font-medium mt-3">
+Price included shipping already to
+US, UK, Canada, EU, Dubai, Saudi Arabia
+</p>
+
+</div>
 
         <div className="flex gap-3">
           <button
@@ -710,55 +772,323 @@ const displayTotal = Math.ceil(convertCurrency(total));
           )}
 
           <div className="text-center pt-4">
-            {overLimit ? (
-            <div className="text-3xl font-bold text-red-600">
-              Please contact us for orders above 200kg
-            </div>
-          ) : (
-            <>
-              <div className="text-6xl font-bold tracking-tight">
-                {currency === 'USD' && `$${displayTotal} USD`}
-                {currency === 'CAD' && `$${displayTotal} CAD`}
-                {currency === 'GBP' && `£${displayTotal} GBP`}
-                {currency === 'EUR' && `€${displayTotal} EUR`}
-              </div>
+          {overLimit ? (
+  <div className="text-3xl font-bold text-red-600">
+    Please contact us for orders above 200kg
+  </div>
+) : (
+  <div className="text-6xl font-bold tracking-tight">
 
-              <div className="mt-8 border rounded-3xl p-6 bg-white">
-                <h2 className="text-2xl font-bold mb-4">
-                  Product Options
-                </h2>
+    {currency === 'USD' && `$${displayTotal} USD`}
+    {currency === 'CAD' && `$${displayTotal} CAD`}
+    {currency === 'GBP' && `£${displayTotal} GBP`}
+    {currency === 'EUR' && `€${displayTotal} EUR`}
+
+  </div>
+)}
+              <div className="mt-8 border rounded-3xl p-5 md:p-8 bg-white">
+
+<h2 className="text-xl md:text-2xl font-bold mb-4">
+Product Options
+</h2>
+
 
                 <div className="mb-6">
                   <h3 className="font-semibold mb-2">Gummies Flavors</h3>
 
                   <p className="text-sm text-gray-500 mb-3">No flavor MOQ. Mix any ratio.</p>
 
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {[
-                      'Passion Fruit',
-                      'Mango',
-                      'Pineapple',
-                      'Ginger',
-                      'Soursop',
-                      'Berry',
-                      'Orange',
-                      'Pandan',
-                      'Spirulina',
-                      'Pea Flower - Mint',
-                    ].map((flavor) => (
-                      <label key={flavor} className="flex gap-2">
-                        <input type="checkbox" />
-                        {flavor}
-                      </label>
-                    ))}
-                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center">
+
+{[
+'Passion Fruit',
+'Mango',
+'Pineapple',
+'Ginger',
+'Soursop',
+'Berry',
+'Orange',
+'Pandan',
+'Spirulina',
+'Pea Flower - Mint',
+].map((flavor)=>(
+
+<button
+type="button"
+key={flavor}
+onClick={()=>{
+if(form.flavors.includes(flavor)){
+setForm({
+...form,
+flavors: form.flavors.filter(
+f=>f!==flavor
+)
+})
+}else{
+setForm({
+...form,
+flavors:[
+...form.flavors,
+flavor
+]
+})
+}
+}}
+
+className={
+form.flavors.includes(flavor)
+? "px-4 py-2 rounded-full text-sm border transition bg-black text-white border-black"
+: "px-4 py-2 rounded-full text-sm border transition bg-white border-gray-300"
+}
+
+>
+{flavor}
+</button>
+
+))}
+
+
+</div>
+
+<div className="mb-6">
+
+<h3 className="font-semibold mb-2 mt-8 text-center">
+Soap Scents
+</h3>
+
+                  <p className="text-sm text-gray-500 mb-3">No scent MOQ. Mix any ratio.</p>
+
+<div className="flex flex-wrap gap-3 justify-center">
+
+{[
+'Lemongrass - Turmeric',
+'Moringa - Mint - Green Tea',
+'Honey - Turmeric',
+].map((scent)=>(
+
+<button
+type="button"
+key={scent}
+
+onClick={()=>{
+
+if(form.soapScents.includes(scent)){
+
+setForm({
+...form,
+soapScents:
+form.soapScents.filter(
+s=>s!==scent
+)
+})
+
+}else{
+
+setForm({
+...form,
+soapScents:[
+...form.soapScents,
+scent
+]
+})
+
+}
+
+}}
+
+className={
+form.soapScents.includes(scent)
+? "px-4 py-2 rounded-full border bg-black text-white"
+: "px-4 py-2 rounded-full border"
+}
+
+>
+
+{scent}
+
+</button>
+
+))}
+
+</div>
+
+</div>
+
+<div className="mb-6">
+
+<h3 className="font-semibold mb-2">
+Jar Lid Color
+</h3>
+
+<div className="flex gap-3 flex-wrap justify-center">
+
+{[
+'Wooden',
+'Black',
+].map((lid)=>(
+
+<button
+key={lid}
+
+type="button"
+
+onClick={()=>setForm({
+...form,
+jarLid:lid
+})}
+
+className={
+form.jarLid===lid
+? "px-4 py-2 rounded-full bg-black text-white"
+:"px-4 py-2 rounded-full border"
+}
+
+>
+
+{lid}
+
+</button>
+
+))}
+
+</div>
+
+</div>
+
+<div>
+
+<h3 className="font-semibold mb-2">
+Pouch Color
+</h3>
+
+<div className="flex gap-3 flex-wrap justify-center">
+
+{[
+'Silver',
+'Brown Kraft',
+'White Kraft',
+].map((color)=>(
+
+<button
+
+type="button"
+
+key={color}
+
+onClick={()=>setForm({
+...form,
+pouchColor:color
+})}
+
+className={
+form.pouchColor===color
+? "px-4 py-2 rounded-full bg-black text-white"
+:"px-4 py-2 rounded-full border"
+}
+
+>
+
+{color}
+
+</button>
+
+))}
+
+</div>
+
+<div className="mt-10">
+
+<h3 className="text-center font-bold mb-4">
+Questions or Ready to Order?
+</h3>
+
+<div className="flex flex-col md:flex-row gap-3 justify-center">
+
+<button
+
+type="button"
+
+onClick={()=>{
+
+const msg=
+encodeURIComponent(
+buildOrderMessage()
+)
+
+window.open(
+`https://wa.me/84348545435?text=${msg}`
+)
+
+}}
+
+className="
+bg-green-600
+text-white
+px-6
+py-3
+rounded-full
+"
+
+>
+
+WhatsApp Larry
+
+</button>
+
+<button
+
+type="button"
+
+onClick={()=>{
+
+navigator.clipboard.writeText(
+buildOrderMessage()
+)
+
+window.open(
+"https://instagram.com/seamosshangxanh"
+)
+
+alert(
+"Order copied. Paste into Instagram DM."
+)
+
+}}
+
+className="
+border
+px-6
+py-3
+rounded-full
+"
+
+>
+
+Instagram DM
+
+</button>
+
+</div>
+
+<p className="text-center text-sm text-gray-500 mt-3">
+
+Need custom packing,
+label or wholesale detail?
+Message before payment.
+
+</p>
+
+</div>
+
+</div>
+
                 </div>
               </div>
-            </>
-                      )}
+            
+                      
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
