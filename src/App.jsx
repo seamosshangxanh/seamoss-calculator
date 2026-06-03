@@ -227,6 +227,11 @@ export default function SeaMossCalculator() {
   const [unit, setUnit] = useState('lbs');
   const [currency, setCurrency] = useState('USD');
   const [form, setForm] = useState({
+    name:'',
+business:'',
+country:'',
+email:'',
+whatsapp:'',
     gummies: '',
     dry: '',
     soap: '',
@@ -406,6 +411,29 @@ const displayTotal = Math.ceil(convertCurrency(total));
 
   const overLimit = roundedWeight > 200;
 
+  let recommendation = ''
+
+if (roundedWeight > 0 && roundedWeight < 20) {
+
+recommendation =
+'💡 New customers usually start with 20–30 jars + 20–30 soaps'
+
+}
+
+else if (roundedWeight >= 20 && roundedWeight < 45) {
+
+recommendation =
+'💡 Add jars or soaps → better landed cost'
+
+}
+
+else if (roundedWeight >= 45) {
+
+recommendation =
+'🔥 Great unit cost zone (45kg+)'
+
+}
+
   const hasOrder =
   gummiesKg > 0 ||
   dryKg > 0 ||
@@ -413,8 +441,114 @@ const displayTotal = Math.ceil(convertCurrency(total));
   jarQty > 0 ||
   pouchQty > 0;
 
+
+const buildSummary = () => {
+
+const rows = []
+
+if(form.gummies){
+
+rows.push(
+`Sea Moss Gummies — ${form.gummies} ${unit}`
+)
+
+if(form.bulkFlavors?.length){
+
+rows.push(
+`Flavors — ${form.bulkFlavors.join(', ')}`
+)
+
+}
+
+}
+
+if(form.jar){
+
+rows.push(
+`60ct Jar — ${form.jar}`
+)
+
+if(form.jarFlavors?.length){
+
+rows.push(
+`Flavor — ${form.jarFlavors.join(', ')}`
+)
+
+}
+
+if(form.jarLid){
+
+rows.push(
+`Lid — ${form.jarLid}`
+)
+
+}
+
+}
+
+if(form.soap){
+
+rows.push(
+`Soap — ${form.soap}`
+)
+
+if(form.soapScents?.length){
+
+rows.push(
+`Scent — ${form.soapScents.join(', ')}`
+)
+
+}
+
+}
+
+if(form.pouch){
+
+rows.push(
+`60ct Pouch — ${form.pouch}`
+)
+
+if(form.pouchFlavors?.length){
+
+rows.push(
+`Flavor — ${form.pouchFlavors.join(', ')}`
+)
+
+}
+
+if(form.pouchColor){
+
+rows.push(
+`Color — ${form.pouchColor}`
+)
+
+}
+
+}
+
+return rows
+
+}
+  
   const buildOrderMessage = () => {
-let msg = `Hello Larry, I built an order:\n\n`
+let msg = `Hello Larry, I built an order:
+
+Name:
+${form.name || '-'}
+
+Business:
+${form.business || '-'}
+
+Country:
+${form.country || '-'}
+
+Email:
+${form.email || '-'}
+
+WhatsApp:
+${form.whatsapp || '-'}
+
+`
 
 if(form.gummies){
 
@@ -720,8 +854,17 @@ Bulk order • Packed in bags
               className="w-5 h-5"
             />
             <label className="font-semibold">
-              Add Label Design Service (+$75 USD)
-            </label>
+
+Add Label Design Service
+
+{' '}
+
+(+{currencySymbol}
+{Math.ceil(convertCurrency(75))}
+{' '}
+{currency})
+
+</label>
           </div>
         </div>
 
@@ -791,17 +934,28 @@ Bulk order • Packed in bags
   </div>
 )}
 
-            {form.labelDesign && (
-              <div className="flex justify-between">
-                <span>Label Design Service</span>
-                <span>
-  {currency === 'USD' && `$75`}
-  {currency === 'CAD' && `$75 CAD`}
-  {currency === 'GBP' && `£75`}
-  {currency === 'EUR' && `€75`}
+           {form.labelDesign && (
+<div className="flex justify-between">
+
+<span>
+Label Design Service
 </span>
-              </div>
-            )}
+
+<span>
+
+{currencySymbol}
+{Math.ceil(
+convertCurrency(75)
+)}
+
+{' '}
+
+{currency}
+
+</span>
+
+</div>
+)}
 
             <div className="flex justify-between border-t pt-3 font-semibold text-gray-800 text-xl">
               <span>Total</span>
@@ -1312,6 +1466,262 @@ form.pouchColor===color
 <div className="mt-10">
 
 <h3 className="text-center font-bold mb-4">
+
+{buildSummary().length > 0 && (
+
+
+<div className="mb-8">
+
+<h3 className="font-bold text-center text-xl mb-5">
+🧾 Order Summary
+</h3>
+
+<div
+className="
+bg-gradient-to-b
+from-white
+to-gray-50
+border
+rounded-3xl
+p-6
+space-y-4
+shadow-sm
+"
+>
+
+{form.gummies > 0 && (
+<div className="bg-green-50 rounded-2xl p-4">
+
+<div className="text-xs uppercase text-gray-500">
+Bulk Gummies
+</div>
+
+<div className="font-bold text-lg">
+{form.gummies} {unit}
+</div>
+
+{!!form.bulkFlavors?.length && (
+<div className="mt-2 text-green-700">
+🍍 {form.bulkFlavors.join(' • ')}
+</div>
+)}
+
+</div>
+)}
+
+{form.jar > 0 && (
+<div className="bg-orange-50 rounded-2xl p-4">
+
+<div className="text-xs uppercase text-gray-500">
+60ct Gummies Jar
+</div>
+
+<div className="font-bold text-lg">
+{form.jar} jars
+</div>
+
+{!!form.jarFlavors?.length && (
+<div className="mt-2 text-orange-700">
+🥭 {form.jarFlavors.join(' • ')}
+</div>
+)}
+
+{!!form.jarLid && (
+<div className="mt-1 text-gray-600">
+🫙 {form.jarLid} lid
+</div>
+)}
+
+</div>
+)}
+
+{form.soap > 0 && (
+<div className="bg-yellow-50 rounded-2xl p-4">
+
+<div className="text-xs uppercase text-gray-500">
+Sea Moss Soap
+</div>
+
+<div className="font-bold text-lg">
+{form.soap} bars
+</div>
+
+{!!form.soapScents?.length && (
+<div className="mt-2 text-yellow-700">
+🧼 {form.soapScents.join(' • ')}
+</div>
+)}
+
+</div>
+)}
+
+{form.pouch > 0 && (
+<div className="bg-purple-50 rounded-2xl p-4">
+
+<div className="text-xs uppercase text-gray-500">
+60ct Gummies Pouch
+</div>
+
+<div className="font-bold text-lg">
+{form.pouch} pouches
+</div>
+
+{!!form.pouchFlavors?.length && (
+<div className="mt-2 text-purple-700">
+🍓 {form.pouchFlavors.join(' • ')}
+</div>
+)}
+
+{!!form.pouchColor && (
+<div className="mt-1 text-gray-600">
+🎨 {form.pouchColor}
+</div>
+)}
+
+</div>
+)}
+
+{form.labelDesign && (
+
+<div className="bg-blue-50 rounded-2xl p-4">
+
+<div className="text-xs uppercase text-gray-500">
+Label Design
+</div>
+
+<div className="font-bold text-blue-700">
+
+🎨 Included
+(+{currencySymbol}{Math.ceil(convertCurrency(75))} {currency})
+
+</div>
+
+</div>
+
+)}
+
+<div className="border-t pt-5 text-center">
+
+<div className="text-sm text-gray-500">
+Estimated Total
+
+{recommendation && (
+
+<div
+className="
+mt-5
+rounded-2xl
+bg-amber-50
+border
+border-amber-200
+p-4
+text-center
+text-sm
+text-amber-800
+"
+>
+
+{recommendation}
+
+</div>
+
+)}
+
+</div>
+
+<div className="text-5xl font-black mt-2">
+
+{currencySymbol}
+{displayTotal}
+
+<span className="text-xl ml-2">
+{currency}
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+)}
+
+<div
+className="
+mb-8
+space-y-3
+"
+>
+
+<input
+placeholder="Your Name"
+value={form.name}
+onChange={(e)=>
+setForm({
+...form,
+name:e.target.value
+})
+}
+className="w-full p-3 rounded-xl border"
+/>
+
+<input
+placeholder="Business Name"
+value={form.business}
+onChange={(e)=>
+setForm({
+...form,
+business:e.target.value
+})
+}
+className="w-full p-3 rounded-xl border"
+/>
+
+<input
+placeholder="Country"
+value={form.country}
+onChange={(e)=>
+setForm({
+...form,
+country:e.target.value
+})
+}
+className="w-full p-3 rounded-xl border"
+/>
+
+<input
+type="email"
+placeholder="Email"
+
+value={form.email}
+
+onChange={(e)=>
+setForm({
+...form,
+email:e.target.value
+})
+}
+
+
+className="w-full p-3 rounded-xl border"
+/>
+
+<input
+placeholder="WhatsApp"
+value={form.whatsapp}
+onChange={(e)=>
+setForm({
+...form,
+whatsapp:e.target.value
+})
+}
+className="w-full p-3 rounded-xl border"
+/>
+
+</div>
+
 Questions or Ready to Order?
 </h3>
 
@@ -1344,7 +1754,12 @@ rounded-full
 
 >
 
-WhatsApp Larry
+WhatsApp Quote
+
+<br />
+<span className="text-xs opacity-80">
+Send order details instantly
+</span>
 
 </button>
 
@@ -1352,19 +1767,27 @@ WhatsApp Larry
 
 type="button"
 
-onClick={()=>{
+onClick={async()=>{
 
-navigator.clipboard.writeText(
+try{
+
+await navigator.clipboard.writeText(
 buildOrderMessage()
 )
 
 window.open(
-"https://instagram.com/seamosshangxanh"
+"https://instagram.com/seamosshangxanh",
+"_blank"
 )
 
+}
+catch{
+
 alert(
-"Order copied. Open Instagram DM and paste."
+"Could not copy automatically"
 )
+
+}
 
 }}
 
@@ -1380,7 +1803,7 @@ rounded-full
 Instagram DM
 <br />
 <span className="text-xs opacity-80">
-Paste Message
+Message with copied order
 </span>
 
 </button>
