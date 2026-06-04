@@ -755,6 +755,14 @@ Accepted payment methods
 
 <PayPalButtons
 
+forceReRender={[
+
+order?.currency,
+
+order?.total
+
+]}
+
 style={{
 
 shape:'pill',
@@ -779,12 +787,12 @@ amount:{
 
 currency_code:
 
-order.currency,
+order?.currency || 'USD',
 
 value:
 
 Number(
-order.total
+order?.total
 ).toFixed(2)
 
 },
@@ -800,7 +808,6 @@ description:
 })
 
 }}
-
 onApprove={
 
 async(
