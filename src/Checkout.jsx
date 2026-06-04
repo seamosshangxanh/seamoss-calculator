@@ -783,7 +783,9 @@ order.currency,
 
 value:
 
-String(order.total)
+Number(
+order.total
+).toFixed(2)
 
 },
 
@@ -809,16 +811,55 @@ actions
 
 )=>{
 
+try{
+
+const capture=
+
 await actions
 .order
 .capture()
+
+console.log(
+'PAYMENT SUCCESS',
+capture
+)
+
+alert(
+'Payment received successfully'
+)
 
 window.location.href=
 '/'
 
 }
 
+catch(err){
+
+console.log(err)
+
+alert(
+'Payment capture failed'
+)
+
 }
+
+}
+
+}
+
+onError={(err)=>{
+
+console.log(
+'PAYPAL ERROR',
+err
+)
+
+alert(
+'Payment failed'
+
+)
+
+}}
 
 />
 

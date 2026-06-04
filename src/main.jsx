@@ -31,9 +31,14 @@ options={{
 clientId:
 'ATdVOTZmw6YGrVZj-a5BmL-uIHzc9gsbtdXVViksY-QfJbC7ZF1Gv8VG8JRLH1gG4CqbB13wcy1-Tr9z',
 
-currency:'USD',
 
 intent:'capture'
+
+,
+components: 'buttons'
+
+
+
 
 }}
 
