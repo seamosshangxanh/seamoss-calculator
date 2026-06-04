@@ -392,11 +392,11 @@ const soapProfitLow = convertCurrency(12 - soapUnitCost);
 const soapProfitHigh = convertCurrency(15 - soapUnitCost);
 
 const currencySymbol =
-  currency === 'GBP'
-    ? '£'
-    : currency === 'EUR'
-    ? '€'
-    : ' $';
+currency === 'GBP'
+? '£'
+: currency === 'EUR'
+? '€'
+: '$'
 
   const labelDesignCost = form.labelDesign ? 75 : 0;
 
@@ -442,93 +442,7 @@ recommendation =
   pouchQty > 0;
 
 
-const buildSummary = () => {
 
-const rows = []
-
-if(form.gummies){
-
-rows.push(
-`Sea Moss Gummies — ${form.gummies} ${unit}`
-)
-
-if(form.bulkFlavors?.length){
-
-rows.push(
-`Flavors — ${form.bulkFlavors.join(', ')}`
-)
-
-}
-
-}
-
-if(form.jar){
-
-rows.push(
-`60ct Jar — ${form.jar}`
-)
-
-if(form.jarFlavors?.length){
-
-rows.push(
-`Flavor — ${form.jarFlavors.join(', ')}`
-)
-
-}
-
-if(form.jarLid){
-
-rows.push(
-`Lid — ${form.jarLid}`
-)
-
-}
-
-}
-
-if(form.soap){
-
-rows.push(
-`Soap — ${form.soap}`
-)
-
-if(form.soapScents?.length){
-
-rows.push(
-`Scent — ${form.soapScents.join(', ')}`
-)
-
-}
-
-}
-
-if(form.pouch){
-
-rows.push(
-`60ct Pouch — ${form.pouch}`
-)
-
-if(form.pouchFlavors?.length){
-
-rows.push(
-`Flavor — ${form.pouchFlavors.join(', ')}`
-)
-
-}
-
-if(form.pouchColor){
-
-rows.push(
-`Color — ${form.pouchColor}`
-)
-
-}
-
-}
-
-return rows
-
-}
   
   const buildOrderMessage = () => {
 let msg = `Hello Larry, I built an order:
@@ -672,7 +586,7 @@ if(form.labelDesign){
 
 msg +=
 `Label Design:
-Yes
+Included (+${currency}${Math.ceil(convertCurrency(75))})
 
 `
 
@@ -975,7 +889,7 @@ convertCurrency(75)
     <div>
       <div>60ct Gummies Jar</div>
       <div className="text-green-700">
-{currencySymbol}{jarProfitLow.toFixed(2)} - {currencySymbol}{jarProfitHigh.toFixed(2)}      </div>
+{currencySymbol}{jarProfitLow.toFixed(2)} - {currencySymbol}{jarProfitHigh.toFixed(2)}  /jar    </div>
     </div>
   )}
 
@@ -983,7 +897,7 @@ convertCurrency(75)
     <div>
       <div>60ct Gummies Pouch</div>
       <div className="text-green-700">
-{currencySymbol}{pouchProfitLow.toFixed(2)} - {currencySymbol}{pouchProfitHigh.toFixed(2)}      </div>
+{currencySymbol}{pouchProfitLow.toFixed(2)} - {currencySymbol}{pouchProfitHigh.toFixed(2)}  /pouch    </div>
     </div>
   )}
 
@@ -991,7 +905,7 @@ convertCurrency(75)
     <div>
       <div>Sea Moss Soap</div>
       <div className="text-green-700">
-        {currencySymbol}{soapProfitLow.toFixed(2)} - {currencySymbol}{soapProfitHigh.toFixed(2)} profit per bar
+        {currencySymbol}{soapProfitLow.toFixed(2)} - {currencySymbol}{soapProfitHigh.toFixed(2)} /bar
       </div>
     </div>
   )}
@@ -1011,16 +925,55 @@ convertCurrency(75)
   </div>
 ) : (
   
- <div className="text-6xl font-bold tracking-tight">
+<div
+className="
+flex
+justify-center
+items-end
+gap-2
+flex-wrap
+"
+>
 
-{hasOrder ? (
+{hasOrder && (
+
 <>
-{currency === 'USD' && `$${displayTotal} USD`}
-{currency === 'CAD' && `$${displayTotal} CAD`}
-{currency === 'GBP' && `£${displayTotal} GBP`}
-{currency === 'EUR' && `€${displayTotal} EUR`}
+
+<div
+className="
+text-[44px]
+md:text-6xl
+font-black
+leading-none
+text-center
+break-all
+max-w-full
+"
+>
+
+{currencySymbol}
+{displayTotal}
+
+</div>
+
+<div
+className="
+w-full
+md:w-auto
+text-center
+text-base
+md:text-2xl
+font-bold
+"
+>
+
+{currency}
+
+</div>
+
 </>
-) : null}
+
+)}
 
 </div>
 
@@ -1465,9 +1418,7 @@ form.pouchColor===color
 
 <div className="mt-10">
 
-<h3 className="text-center font-bold mb-4">
-
-{buildSummary().length > 0 && (
+{hasOrder && (
 
 
 <div className="mb-8">
@@ -1489,110 +1440,164 @@ shadow-sm
 "
 >
 
-{form.gummies > 0 && (
-<div className="bg-green-50 rounded-2xl p-4">
+<div className="space-y-5">
 
-<div className="text-xs uppercase text-gray-500">
+{form.gummies > 0 && (
+<div className="bg-green-50 rounded-3xl p-5">
+
+<div className="uppercase text-gray-500 text-sm font-bold">
 Bulk Gummies
 </div>
 
-<div className="font-bold text-lg">
+<div className="text-xl font-black mb-3">
 {form.gummies} {unit}
 </div>
 
-{!!form.bulkFlavors?.length && (
-<div className="mt-2 text-green-700">
-🍍 {form.bulkFlavors.join(' • ')}
+<div className="space-y-2">
+
+{form.bulkFlavors?.map((f)=>(
+
+<div key={f}>
+• {f}
+</div>
+
+))}
+
+</div>
+
 </div>
 )}
+
+
+{form.dry > 0 && (
+
+<div className="bg-orange-50 rounded-3xl p-5">
+
+<div className="uppercase text-gray-500 text-sm font-bold">
+Gold Sea Moss
+</div>
+
+<div className="text-xl font-bold">
+{form.dry} {unit}
+</div>
+
+</div>
+
+)}
+
+{form.soap > 0 && (
+<div className="bg-yellow-50 rounded-3xl p-5">
+
+<div className="uppercase text-gray-500 text-sm font-bold">
+Sea Moss Soap
+</div>
+
+<div className="text-xl font-black mb-3">
+{form.soap} bars
+</div>
+
+<div className="space-y-2">
+
+{form.soapScents?.map((s)=>(
+
+<div key={s}>
+• {s} 
+</div>
+
+))}
+
+</div>
 
 </div>
 )}
 
 {form.jar > 0 && (
-<div className="bg-orange-50 rounded-2xl p-4">
+<div className="bg-blue-50 rounded-3xl p-5">
 
-<div className="text-xs uppercase text-gray-500">
+<div className="uppercase text-gray-500 text-sm font-bold">
 60ct Gummies Jar
 </div>
 
-<div className="font-bold text-lg">
+<div className="text-xl font-black mb-3">
 {form.jar} jars
 </div>
 
-{!!form.jarFlavors?.length && (
-<div className="mt-2 text-orange-700">
-🥭 {form.jarFlavors.join(' • ')}
+<div className="space-y-2">
+
+{form.jarFlavors?.map((f)=>(
+
+<div key={f}>
+• {f}
 </div>
+
+))}
+
+{form.jarLid && (
+
+<div className="pt-3 font-semibold">
+
+Lid: {form.jarLid}
+
+</div>
+
 )}
 
-{!!form.jarLid && (
-<div className="mt-1 text-gray-600">
-🫙 {form.jarLid} lid
 </div>
-)}
-
-</div>
-)}
-
-{form.soap > 0 && (
-<div className="bg-yellow-50 rounded-2xl p-4">
-
-<div className="text-xs uppercase text-gray-500">
-Sea Moss Soap
-</div>
-
-<div className="font-bold text-lg">
-{form.soap} bars
-</div>
-
-{!!form.soapScents?.length && (
-<div className="mt-2 text-yellow-700">
-🧼 {form.soapScents.join(' • ')}
-</div>
-)}
 
 </div>
 )}
 
 {form.pouch > 0 && (
-<div className="bg-purple-50 rounded-2xl p-4">
+<div className="bg-purple-50 rounded-3xl p-5">
 
-<div className="text-xs uppercase text-gray-500">
+<div className="uppercase text-gray-500 text-sm font-bold">
 60ct Gummies Pouch
 </div>
 
-<div className="font-bold text-lg">
-{form.pouch} pouches
+<div className="text-xl font-black mb-3">
+{form.pouch}
 </div>
 
-{!!form.pouchFlavors?.length && (
-<div className="mt-2 text-purple-700">
-🍓 {form.pouchFlavors.join(' • ')}
+<div className="space-y-2">
+
+{form.pouchFlavors?.map((f)=>(
+
+<div key={f}>
+• {f}
 </div>
+
+))}
+
+{form.pouchColor && (
+
+<div className="pt-3 font-semibold">
+
+Color: {form.pouchColor}
+
+</div>
+
 )}
 
-{!!form.pouchColor && (
-<div className="mt-1 text-gray-600">
-🎨 {form.pouchColor}
 </div>
-)}
 
 </div>
 )}
 
 {form.labelDesign && (
 
-<div className="bg-blue-50 rounded-2xl p-4">
+<div className="bg-pink-50 rounded-3xl p-5">
 
-<div className="text-xs uppercase text-gray-500">
+<div className="uppercase text-gray-500 text-sm font-bold">
 Label Design
 </div>
 
-<div className="font-bold text-blue-700">
+<div className="text-blue-700 font-bold">
 
-🎨 Included
-(+{currencySymbol}{Math.ceil(convertCurrency(75))} {currency})
+Included
+(+{currencySymbol}
+{Math.ceil(convertCurrency(75))}
+{' '}
+{currency})
 
 </div>
 
@@ -1600,10 +1605,10 @@ Label Design
 
 )}
 
-<div className="border-t pt-5 text-center">
-
-<div className="text-sm text-gray-500">
+</div>
+<div className="text-sm text-gray-500 mb-3">
 Estimated Total
+</div>
 
 {recommendation && (
 
@@ -1629,22 +1634,31 @@ text-amber-800
 
 </div>
 
-<div className="text-5xl font-black mt-2">
+<div
+className="
+text-center
+text-[42px]
+md:text-5xl
+font-black
+leading-none
+break-all
+mt-4
+"
+>
 
 {currencySymbol}
 {displayTotal}
 
-<span className="text-xl ml-2">
+<span className="block md:inline text-lg md:text-xl">
 {currency}
 </span>
 
 </div>
-
 </div>
 
-</div>
 
-</div>
+
+
 
 )}
 
@@ -1722,6 +1736,7 @@ className="w-full p-3 rounded-xl border"
 
 </div>
 
+<h3 className="text-center font-bold text-2xl mb-4">
 Questions or Ready to Order?
 </h3>
 
@@ -1733,7 +1748,17 @@ type="button"
 
 onClick={()=>{
 
-const msg=
+if(!hasOrder){
+
+alert(
+'Please add at least 1 product'
+)
+
+return
+
+}
+
+const msg =
 encodeURIComponent(
 buildOrderMessage()
 )
