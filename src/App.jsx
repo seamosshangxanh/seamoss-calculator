@@ -1878,44 +1878,66 @@ onClick={()=>{
 
 const order={
 
-gummies:form.gummies,
+gummies:
+form.gummies,
 
-dry:form.dry,
+dry:
+form.dry,
 
-soap:form.soap,
+soap:
+form.soap,
 
-jar:form.jar,
+jar:
+form.jar,
 
-pouch:form.pouch,
+pouch:
+form.pouch,
 
 unit,
 
-importNotice: roundedWeight >= 20,
+currency,
+
+importNotice:
+roundedWeight >= 20,
+
 totalWeight:
 roundedWeight,
 
+jarUnit:
+'jars',
 
-jarUnit:'jars',
-soapUnit:'bars',
-pouchUnit:'pouches',
+soapUnit:
+'bars',
 
-bulkFlavors:form.bulkFlavors,
+pouchUnit:
+'pouches',
 
-jarFlavors:form.jarFlavors,
+bulkFlavors:
+form.bulkFlavors,
 
-pouchFlavors:form.pouchFlavors,
+jarFlavors:
+form.jarFlavors,
 
-soapScents:form.soapScents,
+pouchFlavors:
+form.pouchFlavors,
 
-jarLid:form.jarLid,
+soapScents:
+form.soapScents,
 
-pouchColor:form.pouchColor,
+jarLid:
+form.jarLid,
 
-labelDesign:form.labelDesign,
+pouchColor:
+form.pouchColor,
 
-total:displayTotal,
+labelDesign:
+form.labelDesign,
 
-currency
+total:
+displayTotal,
+
+usdTotal:
+total
 
 }
 

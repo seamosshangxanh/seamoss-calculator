@@ -29,15 +29,20 @@ document.getElementById('root')
 options={{
 
 clientId:
+
 'ATdVOTZmw6YGrVZj-a5BmL-uIHzc9gsbtdXVViksY-QfJbC7ZF1Gv8VG8JRLH1gG4CqbB13wcy1-Tr9z',
 
 intent:'capture',
 
 currency:'USD',
 
-components:'buttons',
+components:
 
-enableFunding:'card'
+'buttons,marks,funding-eligibility',
+
+enableFunding:
+
+'card,paylater'
 
 }}
 
