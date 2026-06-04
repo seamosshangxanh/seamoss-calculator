@@ -228,10 +228,7 @@ export default function SeaMossCalculator() {
   const [currency, setCurrency] = useState('USD');
   const [form, setForm] = useState({
     name:'',
-business:'',
 country:'',
-email:'',
-whatsapp:'',
     gummies: '',
     dry: '',
     soap: '',
@@ -288,7 +285,7 @@ pouchColor: '',
   let shippingCost = shippingTable[roundedWeight] || 0;
 
   // Hidden soap surcharge
-  if (soapQty > 0 && roundedWeight > 20) {
+  if (soapQty > 0 && roundedWeight >= 20) {
     shippingCost += 13;
   }
 
@@ -450,17 +447,13 @@ let msg = `Hello Larry, I built an order:
 Name:
 ${form.name || '-'}
 
-Business:
-${form.business || '-'}
 
 Country:
 ${form.country || '-'}
 
-Email:
-${form.email || '-'}
 
-WhatsApp:
-${form.whatsapp || '-'}
+
+
 
 `
 
@@ -701,8 +694,16 @@ Bulk order • Packed in bags
 
           <div className="space-y-2">
             <label className="font-semibold">
-              Gold Sea Moss ({unit})
-            </label>
+
+Gold Sea Moss ({unit})
+
+<div className="text-sm font-normal text-transparent">
+
+Bulk order • Packed in bags
+
+</div>
+
+</label>
             <input
               type="number"
               value={form.dry}
@@ -748,7 +749,7 @@ Bulk order • Packed in bags
             <label className="font-semibold">
               60ct Gummies Pouch (quantity)
               <div className="text-sm font-normal text-gray-500">
-                Labeling apply & seal included
+                Labeling apply included
               </div>
             </label>
             <input
@@ -800,6 +801,20 @@ Add Label Design Service
   </div>
 )}
 
+{gummiesKg > 0 && (
+
+<div className="text-xs text-gray-500">
+
+{gummiesKg < 5
+? 'Best for testing flavors'
+: gummiesKg < 20
+? 'Balanced landed cost'
+: 'Good shipping efficiency'}
+
+</div>
+
+)}
+
             {dryKg > 0 && (
   <div className="flex justify-between">
     <span>Gold Sea Moss</span>
@@ -810,6 +825,18 @@ Add Label Design Service
 {currency === 'EUR' && `€${dryDisplayPrice.toFixed(2)} / ${unit}`}
 </span>
   </div>
+)}
+
+{dryKg > 0 && (
+
+<div className="text-xs text-gray-500">
+
+{dryKg < 5
+? 'Usually mixed with other products'
+: 'Good standalone order'}
+
+</div>
+
 )}
 
             {soapQty > 0 && (
@@ -824,6 +851,18 @@ Add Label Design Service
   </div>
 )}
 
+{soapQty > 0 && (
+
+<div className="text-xs text-gray-500">
+
+{soapQty < 20
+? 'Good for testing'
+: 'Popular wholesale size'}
+
+</div>
+
+)}
+
            {jarQty > 0 && (
   <div className="flex justify-between">
     <span>60ct Gummies Jar</span>
@@ -834,6 +873,21 @@ Add Label Design Service
 {currency === 'EUR' && `€${jarDisplayPrice.toFixed(2)} / jar`}
 </span>
   </div>
+  
+)}
+
+{jarQty > 0 && (
+
+<div className="text-xs text-gray-500">
+
+{jarQty < 20
+? 'Small test quantity'
+: jarQty < 50
+? 'Good starter order'
+: 'Better unit cost'}
+
+</div>
+
 )}
 
            {pouchQty > 0 && (
@@ -846,6 +900,20 @@ Add Label Design Service
 {currency === 'EUR' && `€${pouchDisplayPrice.toFixed(2)} / pouch`}
 </span>
   </div>
+)}
+
+{pouchQty > 0 && (
+
+<div className="text-xs text-gray-500">
+
+{pouchQty < 20
+? 'Small test quantity'
+: pouchQty < 50
+? 'Good starter order'
+: 'Better unit cost'}
+
+</div>
+
 )}
 
            {form.labelDesign && (
@@ -912,7 +980,7 @@ convertCurrency(75)
 </div>
           </div>
 
-          {roundedWeight > 20 && (
+          {roundedWeight >= 20 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-sm text-yellow-800">
               Import tax may apply. Most customers pay around $30–$60 USD through an online payment link or SMS notification after the shipment arrives.
             </div>
@@ -1669,6 +1737,10 @@ space-y-3
 "
 >
 
+<h3 className="text-center font-bold text-2xl mb-4">
+Questions or Ready to Order?
+</h3>
+
 <input
 placeholder="Your Name"
 value={form.name}
@@ -1681,17 +1753,7 @@ name:e.target.value
 className="w-full p-3 rounded-xl border"
 />
 
-<input
-placeholder="Business Name"
-value={form.business}
-onChange={(e)=>
-setForm({
-...form,
-business:e.target.value
-})
-}
-className="w-full p-3 rounded-xl border"
-/>
+
 
 <input
 placeholder="Country"
@@ -1705,40 +1767,13 @@ country:e.target.value
 className="w-full p-3 rounded-xl border"
 />
 
-<input
-type="email"
-placeholder="Email"
-
-value={form.email}
-
-onChange={(e)=>
-setForm({
-...form,
-email:e.target.value
-})
-}
 
 
-className="w-full p-3 rounded-xl border"
-/>
 
-<input
-placeholder="WhatsApp"
-value={form.whatsapp}
-onChange={(e)=>
-setForm({
-...form,
-whatsapp:e.target.value
-})
-}
-className="w-full p-3 rounded-xl border"
-/>
 
 </div>
 
-<h3 className="text-center font-bold text-2xl mb-4">
-Questions or Ready to Order?
-</h3>
+
 
 <div className="flex flex-col md:flex-row gap-3 justify-center">
 
@@ -1834,6 +1869,97 @@ Message with copied order
 </button>
 
 </div>
+
+<button
+
+type="button"
+
+onClick={()=>{
+
+const order={
+
+gummies:form.gummies,
+
+dry:form.dry,
+
+soap:form.soap,
+
+jar:form.jar,
+
+pouch:form.pouch,
+
+unit,
+
+importNotice: roundedWeight >= 20,
+totalWeight:
+roundedWeight,
+
+
+jarUnit:'jars',
+soapUnit:'bars',
+pouchUnit:'pouches',
+
+bulkFlavors:form.bulkFlavors,
+
+jarFlavors:form.jarFlavors,
+
+pouchFlavors:form.pouchFlavors,
+
+soapScents:form.soapScents,
+
+jarLid:form.jarLid,
+
+pouchColor:form.pouchColor,
+
+labelDesign:form.labelDesign,
+
+total:displayTotal,
+
+currency
+
+}
+
+localStorage.setItem(
+'checkoutOrder',
+JSON.stringify(order)
+)
+
+window.location.href='/checkout'
+
+}}
+
+className="
+w-full
+rounded-full
+bg-gradient-to-r
+from-[#FFC439]
+to-[#FFB347]
+text-[#003087]
+font-bold
+py-5
+mt-4
+shadow-md
+hover:brightness-95
+transition
+"
+
+>
+
+Checkout
+
+<div
+className="
+text-xs
+text-[#003087]
+opacity-80
+"
+>
+
+Secure shipping & payment
+
+</div>
+
+</button>
 
 <p className="text-center text-sm text-gray-500 mt-3">
 
