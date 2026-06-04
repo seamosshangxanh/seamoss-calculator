@@ -33,6 +33,8 @@ clientId:
 
 intent:'capture',
 
+currency:'USD',
+
 components:'buttons',
 
 enableFunding:'card'

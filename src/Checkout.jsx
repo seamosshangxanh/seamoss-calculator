@@ -63,6 +63,16 @@ useState(false)
 const [invoice,setInvoice]=
 useState(false)
 
+const [
+
+,
+
+dispatch
+
+]=
+
+usePayPalScriptReducer()
+
 const [order,setOrder]=
 useState(null)
 
@@ -753,6 +763,37 @@ Accepted payment methods
 
 <div className="mt-5">
 
+{useEffect(()=>{
+
+if(
+order?.currency
+){
+
+dispatch({
+
+type:
+
+'resetOptions',
+
+value:{
+
+currency:
+order.currency
+
+}
+
+})
+
+}
+
+},
+
+[
+
+order?.currency
+
+])}
+
 <PayPalButtons
 
 forceReRender={[
@@ -787,7 +828,7 @@ amount:{
 
 currency_code:
 
-order?.currency || 'USD',
+order.currency,
 
 value:
 
