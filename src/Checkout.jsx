@@ -13,6 +13,10 @@ useEffect
 }
 from 'react'
 
+import emailjs
+from
+'@emailjs/browser'
+
 export default function Checkout(){
 
 const [form,setForm]=useState({
@@ -323,6 +327,47 @@ Bulk Gummies — {order.gummies} {order.unit}
 
 )}
 
+{
+
+order.bulkFlavorNote
+
+&&
+
+(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+<div
+className="
+whitespace-pre-line
+"
+>
+
+{
+
+order.bulkFlavorNote
+
+}
+
+</div>
+
+</div>
+
+)
+
+}
+
 </div>
 
 )}
@@ -397,6 +442,40 @@ Soap — {order.soap} {order.soapUnit}
 
 )}
 
+{
+
+order.jarFlavorNote
+
+&&
+
+(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+whitespace-pre-line
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+order.jarFlavorNote
+
+}
+
+</div>
+
+)
+
+}
+
 {order.jarLid && (
 
 <div className="text-gray-500 pl-3">
@@ -436,6 +515,40 @@ Lid: {order.jarLid}
 </div>
 
 )}
+
+{
+
+order.pouchFlavorNote
+
+&&
+
+(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+whitespace-pre-line
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+order.pouchFlavorNote
+
+}
+
+</div>
+
+)
+
+}
 
 {order.pouchColor && (
 
@@ -857,19 +970,300 @@ actions
 
 try{
 
-const capture=
+const payment=
 
 await actions
 .order
 .capture()
 
-console.log(
-'PAYMENT SUCCESS',
-capture
+const customer=
+
+JSON.parse(
+
+localStorage.getItem(
+'checkoutCustomer'
 )
 
+)
+
+const paymentId=
+payment.id
+
+const lines=[]
+
+lines.push(
+`Customer:
+${customer?.name}`
+)
+
+lines.push(
+`Email:
+${customer?.email || '-'}`
+)
+
+lines.push(
+`Phone:
+${customer?.phone || '-'}`
+)
+
+lines.push(
+`Country:
+${customer?.country || '-'}`
+)
+
+lines.push(
+`Address:
+${customer?.address || '-'}`
+)
+
+lines.push(
+`State:
+${customer?.state || '-'}`
+)
+
+lines.push(
+`City:
+${customer?.city || '-'}`
+)
+
+lines.push(
+`ZIP:
+${customer?.zip || '-'}`
+)
+
+if(order.gummies>0){
+
+lines.push(
+`Sea Moss Gummies:
+${order.gummies} ${order.unit}`
+)
+
+if(order.bulkFlavors?.length){
+
+lines.push(
+`Flavors:
+${order.bulkFlavors.join(', ')}`
+)
+
+}
+
+if(order.bulkFlavorNote){
+
+lines.push(
+`Mix Ratio:
+${order.bulkFlavorNote}`
+)
+
+}
+
+}
+
+if(order.dry>0){
+
+lines.push(
+`Gold Sea Moss:
+${order.dry} ${order.unit}`
+)
+
+}
+
+if(order.soap>0){
+
+lines.push(
+`Soap:
+${order.soap} bars`
+)
+
+if(order.soapScents?.length){
+
+lines.push(
+`Scents:
+${order.soapScents.join(', ')}`
+)
+
+}
+
+}
+
+if(order.jar>0){
+
+lines.push(
+`60ct Gummies Jar:
+${order.jar} jars`
+)
+
+if(order.jarFlavors?.length){
+
+lines.push(
+`Flavors:
+${order.jarFlavors.join(', ')}`
+)
+
+}
+
+if(order.jarFlavorNote){
+
+lines.push(
+`Mix Ratio:
+${order.jarFlavorNote}`
+)
+
+}
+
+if(order.jarLid){
+
+lines.push(
+`Lid:
+${order.jarLid}`
+)
+
+}
+
+}
+
+if(order.pouch>0){
+
+lines.push(
+`60ct Gummies Pouch:
+${order.pouch} pouches`
+)
+
+if(order.pouchFlavors?.length){
+
+lines.push(
+`Flavors:
+${order.pouchFlavors.join(', ')}`
+)
+
+}
+
+if(order.pouchFlavorNote){
+
+lines.push(
+`Mix Ratio:
+${order.pouchFlavorNote}`
+)
+
+}
+
+if(order.pouchColor){
+
+lines.push(
+`Color:
+${order.pouchColor}`
+)
+
+}
+
+}
+
+if(order.labelDesign){
+
+lines.push(
+'Label Design: Included'
+)
+
+}
+
+lines.push(
+`Total Weight:
+${order.totalWeight} kg`
+)
+
+lines.push(
+`Amount:
+US$${order.usdTotal}`
+)
+
+lines.push(
+`Payment ID:
+${paymentId}`
+)
+
+const orderText=
+lines.join('\n\n')
+
+await Promise.all([
+
+emailjs.send(
+
+'service_wwkhsdi',
+
+'template_wdcobns',
+
+{
+
+customer_name:
+
+customer?.name,
+
+country:
+
+customer?.country,
+
+amount:
+
+`US$${order.usdTotal}`,
+
+payment_id:
+
+paymentId,
+
+order:
+
+orderText,
+
+email:
+
+customer?.email || form.email
+
+
+},
+
+'DDRcOIwMymVP1S2_s'
+
+),
+
+emailjs.send(
+
+'service_wwkhsdi',
+
+'template_hk1hkgn',
+
+{
+
+customer_name:
+
+customer?.name,
+
+country:
+
+customer?.country,
+
+amount:
+
+`US$${order.usdTotal}`,
+
+payment_id:
+
+paymentId,
+
+order:
+
+orderText
+
+},
+
+'DDRcOIwMymVP1S2_s'
+
+)
+
+])
+
 alert(
-'Payment received successfully'
+
+'Payment successful. Confirmation email sent.'
+
 )
 
 window.location.href=
@@ -879,17 +1273,27 @@ window.location.href=
 
 catch(err){
 
-console.log(err)
+console.error(
+'EMAIL ERROR',
+err
+)
 
 alert(
-'Payment capture failed'
+
+err?.text||
+
+err?.message||
+
+'Email failed'
+
 )
 
 }
-
 }
 
 }
+
+
 
 onError={(err)=>{
 

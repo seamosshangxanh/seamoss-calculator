@@ -4,23 +4,23 @@ export default function SeaMossCalculator() {
   // Shipping table = TOTAL SHIPPING COST (USD)
   const shippingTable = {
     1: 51.9,
-    1.5: 57.015,
+    1.5: 57.02,
     2: 62.24,
-    2.5: 67.475,
+    2.5: 67.47,
     3: 72.69,
     3.5: 77.91,
     4: 83.14,
-    4.5: 88.785,
-    5: 98.25,
-    5.5: 104.005,
-    6: 109.74,
-    6.5: 115.505,
+    4.5: 88.78,
+    5: 98.27,
+    5.5: 104.01,
+    6: 109.75,
+    6.5: 115.50,
     7: 121.24,
-    7.5: 126.975,
+    7.5: 126.98,
     8: 132.72,
-    8.5: 138.465,
-    9: 144.18,
-    9.5: 149.91,
+    8.5: 138.46,
+    9: 144.21,
+    9.5: 149.95,
     10: 156.36,
     10.5: 162.34,
     11: 168.31,
@@ -28,15 +28,15 @@ export default function SeaMossCalculator() {
     12: 180.27,
     12.5: 186.24,
     13: 192.22,
-    13.5: 198.2,
+    13.5: 198.20,
     14: 204.17,
     14.5: 210.15,
     15: 215.37,
-    15.5: 221.3,
+    15.5: 221.30,
     16: 227.22,
     16.5: 233.15,
     17: 239.08,
-    17.5: 245,
+    17.5: 245.00,
     18: 250.93,
     18.5: 256.86,
     19: 262.78,
@@ -236,8 +236,13 @@ country:'',
     pouch: '',
     labelDesign: false,
   bulkFlavors: [],
+bulkFlavorNote:'',
+
 jarFlavors: [],
+jarFlavorNote:'',
+
 pouchFlavors: [],
+pouchFlavorNote:'',
   soapScents: [],
   jarLid: '',
 pouchColor: '',
@@ -451,10 +456,6 @@ ${form.name || '-'}
 Country:
 ${form.country || '-'}
 
-
-
-
-
 `
 
 if(form.gummies){
@@ -472,6 +473,18 @@ msg +=
 ${form.bulkFlavors.join(', ')}
 
 `
+
+if(
+form.bulkFlavorNote
+){
+
+msg+=
+`Mix Ratio:
+${form.bulkFlavorNote}
+
+`
+
+}
 
 }
 
@@ -525,6 +538,18 @@ ${form.jarFlavors.join(', ')}
 
 `
 
+if(
+form.jarFlavorNote
+){
+
+msg+=
+`Mix Ratio:
+${form.jarFlavorNote}
+
+`
+
+}
+
 }
 
 if(form.jarLid){
@@ -558,6 +583,18 @@ msg +=
 ${form.pouchFlavors.join(', ')}
 
 `
+
+if(
+form.pouchFlavorNote
+){
+
+msg+=
+`Mix Ratio:
+${form.pouchFlavorNote}
+
+`
+
+}
 
 }
 
@@ -1068,6 +1105,7 @@ No flavor MOQ. Mix any ratio.
 <div className="flex flex-wrap gap-2 justify-center">
 
 {[
+'Assorted',
 'Passion Fruit',
 'Mango',
 'Pineapple',
@@ -1086,27 +1124,59 @@ key={flavor}
 
 onClick={()=>{
 
-if(form.bulkFlavors.includes(flavor)){
+if(
+flavor==='Assorted'
+){
 
 setForm({
+
 ...form,
+
 bulkFlavors:
-form.bulkFlavors.filter(
-f=>f!==flavor
+
+form.bulkFlavors.includes(
+'Assorted'
 )
+
+? []
+
+: ['Assorted'],
+
+bulkFlavorNote:''
 
 })
 
+}
+
+else{
+
+let next=
+
+form.bulkFlavors.filter(
+f=>f!=='Assorted'
+)
+
+if(
+next.includes(flavor)
+){
+
+next=
+next.filter(
+f=>f!==flavor
+)
+
 }else{
+
+next.push(flavor)
+
+}
 
 setForm({
 
 ...form,
 
-bulkFlavors:[
-...form.bulkFlavors,
-flavor
-]
+bulkFlavors:
+next
 
 })
 
@@ -1142,6 +1212,92 @@ form.bulkFlavors.includes(flavor)
 
 )}
 
+{
+
+form.bulkFlavors.length>1
+
+&&
+
+!form.bulkFlavors.includes(
+'Assorted'
+)
+
+&&(
+
+<div
+className="
+mt-4
+"
+>
+
+<label
+className="
+font-semibold
+text-sm
+"
+>
+
+Flavor Mix Ratio
+(optional)
+
+</label>
+
+<textarea
+
+placeholder={
+`Example:
+
+5 lbs Mango
+2 lbs Passion Fruit
+1 lbs Pea Flower
+`
+}
+
+value={
+form.bulkFlavorNote
+}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+bulkFlavorNote:
+e.target.value
+
+})
+
+}
+
+className="
+w-full
+border
+rounded-2xl
+p-4
+mt-2
+"
+
+/>
+
+<div
+className="
+text-xs
+text-gray-500
+mt-2
+"
+>
+
+Only fill if you want specific quantity per flavor
+
+</div>
+
+</div>
+
+)
+
+}
+
 
 
 {jarQty > 0 && (
@@ -1159,6 +1315,7 @@ No flavor MOQ. Mix any ratio.
 <div className="flex flex-wrap gap-2 justify-center">
 
 {[
+'Assorted',
 'Passion Fruit',
 'Mango',
 'Pineapple',
@@ -1177,34 +1334,65 @@ key={flavor}
 
 onClick={()=>{
 
-if(form.jarFlavors.includes(flavor)){
+if(
+flavor==='Assorted'
+){
 
 setForm({
+
 ...form,
+
 jarFlavors:
-form.jarFlavors.filter(
-f=>f!==flavor
+
+form.jarFlavors.includes(
+'Assorted'
 )
+
+? []
+
+: ['Assorted'],
+
+jarFlavorNote:''
 
 })
 
+}
+
+else{
+
+let next=
+
+form.jarFlavors.filter(
+f=>f!=='Assorted'
+)
+
+if(
+next.includes(flavor)
+){
+
+next=
+next.filter(
+f=>f!==flavor
+)
+
 }else{
+
+next.push(flavor)
+
+}
 
 setForm({
 
 ...form,
 
-jarFlavors:[
-...form.jarFlavors,
-flavor
-]
+jarFlavors:
+next
 
 })
 
 }
 
 }}
-
 className={
 
 form.jarFlavors.includes(flavor)
@@ -1233,6 +1421,69 @@ form.jarFlavors.includes(flavor)
 
 )}
 
+{
+
+form.jarFlavors.length>1
+
+&&
+
+!form.jarFlavors.includes(
+'Assorted'
+)
+
+&&(
+
+<div
+className="
+mt-4
+"
+>
+
+<label
+className="
+font-semibold
+text-sm
+"
+>
+
+Flavor Mix Ratio
+(optional)
+
+</label>
+
+<textarea
+  placeholder={
+    `Example:\n\n10 jar Mango\n20 jar Passion Fruit\n15 jar Pea Flower\n`
+  }
+  value={form.jarFlavorNote}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      jarFlavorNote: e.target.value,
+    })
+  }
+  className="w-full border rounded-2xl p-4 mt-2"
+></textarea>
+
+
+<div
+className="
+text-xs
+text-gray-500
+mt-2
+"
+>
+
+Only fill if you want specific quantity per flavor
+
+</div>
+
+</div>
+
+)
+
+}
+
 {pouchQty > 0 && (
 
 
@@ -1250,6 +1501,7 @@ No flavor MOQ. Mix any ratio.
 <div className="flex flex-wrap gap-2 justify-center">
 
 {[
+'Assorted',
 'Passion Fruit',
 'Mango',
 'Pineapple',
@@ -1268,27 +1520,59 @@ key={flavor}
 
 onClick={()=>{
 
-if(form.pouchFlavors.includes(flavor)){
+if(
+flavor==='Assorted'
+){
 
 setForm({
+
 ...form,
+
 pouchFlavors:
-form.pouchFlavors.filter(
-f=>f!==flavor
+
+form.pouchFlavors.includes(
+'Assorted'
 )
+
+? []
+
+: ['Assorted'],
+
+pouchFlavorNote:''
 
 })
 
+}
+
+else{
+
+let next=
+
+form.pouchFlavors.filter(
+f=>f!=='Assorted'
+)
+
+if(
+next.includes(flavor)
+){
+
+next=
+next.filter(
+f=>f!==flavor
+)
+
 }else{
+
+next.push(flavor)
+
+}
 
 setForm({
 
 ...form,
 
-pouchFlavors:[
-...form.pouchFlavors,
-flavor
-]
+pouchFlavors:
+next
 
 })
 
@@ -1324,6 +1608,91 @@ form.pouchFlavors.includes(flavor)
 </div>
 
 )}
+
+{
+
+form.pouchFlavors.length>1
+
+&&
+
+!form.pouchFlavors.includes(
+'Assorted'
+)
+
+&&(
+
+<div
+className="
+mt-4
+"
+>
+
+<label
+className="
+font-semibold
+text-sm
+"
+>
+
+Flavor Mix Ratio
+(optional)
+
+</label>
+
+<textarea
+
+placeholder={`
+Example:
+
+10 pouch Mango
+20 pouch Passion Fruit
+15 pouch Pea Flower
+`}
+
+value={
+form.pouchFlavorNote
+}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+pouchFlavorNote:
+e.target.value
+
+})
+
+}
+
+className="
+w-full
+border
+rounded-2xl
+p-4
+mt-2
+"
+
+/>
+
+<div
+className="
+text-xs
+text-gray-500
+mt-2
+"
+>
+
+Only fill if you want specific quantity per flavor
+
+</div>
+
+</div>
+
+)
+
+}
 
 {soapQty > 0 && (
 
@@ -1531,6 +1900,35 @@ Bulk Gummies
 
 ))}
 
+{
+
+form.bulkFlavorNote&&(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+form.bulkFlavorNote
+
+}
+
+</div>
+
+)
+
+}
+
 </div>
 
 </div>
@@ -1600,6 +1998,35 @@ Sea Moss Soap
 
 ))}
 
+{
+
+form.jarFlavorNote&&(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+form.jarFlavorNote
+
+}
+
+</div>
+
+)
+
+}
+
 {form.jarLid && (
 
 <div className="pt-3 font-semibold">
@@ -1623,7 +2050,7 @@ Lid: {form.jarLid}
 </div>
 
 <div className="text-xl font-black mb-3">
-{form.pouch}
+{form.pouch} pouches
 </div>
 
 <div className="space-y-2">
@@ -1635,6 +2062,35 @@ Lid: {form.jarLid}
 </div>
 
 ))}
+
+{
+
+form.pouchFlavorNote&&(
+
+<div
+className="
+mt-3
+text-sm
+italic
+text-gray-600
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+form.pouchFlavorNote
+
+}
+
+</div>
+
+)
+
+}
 
 {form.pouchColor && (
 
@@ -1878,6 +2334,8 @@ onClick={()=>{
 
 const order={
 
+  
+
 gummies:
 form.gummies,
 
@@ -1915,11 +2373,20 @@ pouchUnit:
 bulkFlavors:
 form.bulkFlavors,
 
+bulkFlavorNote:
+form.bulkFlavorNote,
+
 jarFlavors:
 form.jarFlavors,
 
+jarFlavorNote:
+form.jarFlavorNote,
+
 pouchFlavors:
 form.pouchFlavors,
+
+pouchFlavorNote:
+form.pouchFlavorNote,
 
 soapScents:
 form.soapScents,
