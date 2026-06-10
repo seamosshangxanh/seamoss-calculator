@@ -509,7 +509,7 @@ if(form.soap){
 
 msg +=
 `Sea Moss Soap:
-${form.soap}
+${form.soap} bars
 
 `
 
@@ -518,6 +518,16 @@ if(form.soapScents.length){
 msg +=
 `Scents:
 ${form.soapScents.join(', ')}
+
+`
+
+}
+
+if(form.soapMixNote){
+
+msg +=
+`Mix Ratio:
+${form.soapMixNote}
 
 `
 
