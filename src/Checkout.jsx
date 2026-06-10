@@ -408,6 +408,37 @@ Soap — {order.soap} {order.soapUnit}
 
 ))}
 
+{
+
+order.soapMixNote
+
+&&(
+
+<div
+className="
+mt-3
+italic
+text-gray-600
+whitespace-pre-line
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+order.soapMixNote
+
+}
+
+</div>
+
+)
+
+}
+
 </div>
 
 )}
@@ -1070,15 +1101,34 @@ ${order.dry} ${order.unit}`
 if(order.soap>0){
 
 lines.push(
+
 `Soap:
 ${order.soap} bars`
+
 )
 
-if(order.soapScents?.length){
+if(
+order.soapScents?.length
+){
 
 lines.push(
+
 `Scents:
 ${order.soapScents.join(', ')}`
+
+)
+
+}
+
+if(
+order.soapMixNote
+){
+
+lines.push(
+
+`Mix Ratio:
+${order.soapMixNote}`
+
 )
 
 }

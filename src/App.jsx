@@ -243,7 +243,10 @@ jarFlavorNote:'',
 
 pouchFlavors: [],
 pouchFlavorNote:'',
-  soapScents: [],
+  
+soapScents:[],
+soapMixNote:'',
+
   jarLid: '',
 pouchColor: '',
 
@@ -899,6 +902,7 @@ Add Label Design Service
 </div>
 
 )}
+
 
            {jarQty > 0 && (
   <div className="flex justify-between">
@@ -1702,7 +1706,9 @@ Only fill if you want specific quantity per flavor
 Soap Scents
 </h3>
 
-                  <p className="text-sm text-gray-500 mb-3">No scent MOQ. Mix any ratio.</p>
+<p className="text-sm text-gray-500 mb-3">
+No scent MOQ. Mix any ratio.
+</p>
 
 <div className="flex flex-wrap gap-3 justify-center">
 
@@ -1718,34 +1724,49 @@ key={scent}
 
 onClick={()=>{
 
-if(form.soapScents.includes(scent)){
+let next=
 
-setForm({
-...form,
-soapScents:
+form.soapScents.includes(
+scent
+)
+
+?
+
 form.soapScents.filter(
 s=>s!==scent
 )
-})
 
-}else{
+:
 
-setForm({
-...form,
-soapScents:[
+[
 ...form.soapScents,
 scent
-]
-})
+];
 
-}
+setForm({
+
+...form,
+
+soapScents:
+next,
+
+soapMixNote:
+next.length<2
+?
+''
+:
+form.soapMixNote
+
+});
 
 }}
 
 className={
 form.soapScents.includes(scent)
-? "px-4 py-2 rounded-full border bg-black text-white"
-: "px-4 py-2 rounded-full border"
+?
+"px-4 py-2 rounded-full border bg-black text-white"
+:
+"px-4 py-2 rounded-full border"
 }
 
 >
@@ -1758,10 +1779,87 @@ form.soapScents.includes(scent)
 
 </div>
 
+{
+
+form.soapScents.length>=2
+
+&&(
+
+<div
+className="
+mt-5
+"
+>
+
+<label
+className="
+font-semibold
+text-sm
+block
+mb-2
+"
+>
+
+Soap Mix Ratio
+(optional)
+
+</label>
+
+<textarea
+
+placeholder={`Example:
+
+10 Honey
+
+10 Lemongrass`}
+
+value={
+form.soapMixNote
+}
+
+onChange={(e)=>
+
+setForm({
+
+...form,
+
+soapMixNote:
+e.target.value
+
+})
+
+}
+
+className="
+w-full
+border
+rounded-2xl
+p-4
+"
+
+/>
+
+<div
+className="
+text-xs
+text-gray-500
+mt-2
+"
+>
+
+Only fill if you want specific quantity per scent
+
+</div>
+
+</div>
+
+)
+
+}
+
 </div>
 
 )}
-
 {jarQty > 0 && (
 
 <div className="mb-6 mt-8">
@@ -1970,12 +2068,49 @@ Sea Moss Soap
 • {s} 
 </div>
 
+
+
 ))}
+
+{
+
+form.soapMixNote
+
+&&(
+
+<div
+className="
+mt-3
+italic
+text-gray-600
+whitespace-pre-line
+"
+>
+
+Mix Ratio:
+
+<br/>
+
+{
+
+form.soapMixNote
+
+}
+
+</div>
+
+)
+
+}
 
 </div>
 
 </div>
 )}
+
+
+
+
 
 {form.jar > 0 && (
 <div className="bg-blue-50 rounded-3xl p-5">
@@ -2130,9 +2265,7 @@ Included
 )}
 
 </div>
-<div className="text-sm text-gray-500 mb-3">
-Estimated Total
-</div>
+
 
 {recommendation && (
 
@@ -2390,6 +2523,9 @@ form.pouchFlavorNote,
 
 soapScents:
 form.soapScents,
+
+soapMixNote:
+form.soapMixNote,
 
 jarLid:
 form.jarLid,
