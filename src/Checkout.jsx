@@ -17,6 +17,16 @@ import emailjs
 from
 '@emailjs/browser'
 
+import {
+
+supabase
+
+}
+
+from
+
+'./supabase'
+
 export default function Checkout(){
 
 const [form,setForm]=useState({
@@ -999,13 +1009,16 @@ actions
 
 )=>{
 
-try{
+
+    try{
 
 const payment=
 
 await actions
 .order
 .capture()
+
+
 
 const customer=
 
@@ -1016,6 +1029,21 @@ localStorage.getItem(
 )
 
 )
+
+console.log(
+'PAYMENT OK'
+)
+
+console.log(
+customer
+)
+
+console.log(
+order
+)
+
+
+
 
 const paymentId=
 payment.id
@@ -1233,6 +1261,88 @@ ${paymentId}`
 const orderText=
 lines.join('\n\n')
 
+const {
+
+data:paidOrder,
+
+error:supabaseError
+
+}=
+
+await supabase
+
+.from(
+'orders'
+)
+
+.insert([
+
+{
+
+customer_name:
+customer?.name,
+
+email:
+customer?.email,
+
+phone:
+customer?.phone,
+
+country:
+customer?.country,
+
+address:
+customer?.address,
+
+city:
+customer?.city,
+
+state:
+customer?.state,
+
+payment_id:
+payment.id,
+
+status:
+'paid',
+
+total:
+order.total,
+
+currency:
+order.currency,
+
+order_data:
+order,
+
+order_summary:
+orderText
+
+}
+
+])
+
+.select()
+
+.single()
+
+console.log(
+'PAID ORDER:',
+paidOrder
+)
+
+if(
+supabaseError
+){
+
+console.log(
+supabaseError
+)
+
+throw supabaseError
+
+}
+
 await Promise.all([
 
 emailjs.send(
@@ -1316,8 +1426,12 @@ alert(
 
 )
 
+localStorage.removeItem(
+'orderDraftId'
+)
+
 window.location.href=
-'/'
+'/thank-you'
 
 }
 

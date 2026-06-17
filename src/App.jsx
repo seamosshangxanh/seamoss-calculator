@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { supabase } from './supabase'
+
 export default function SeaMossCalculator() {
   // Shipping table = TOTAL SHIPPING COST (USD)
   const shippingTable = {
@@ -229,6 +231,13 @@ export default function SeaMossCalculator() {
   const [form, setForm] = useState({
     name:'',
 country:'',
+
+address:'',
+
+city:'',
+
+state:'',
+
     gummies: '',
     dry: '',
     soap: '',
@@ -644,6 +653,241 @@ Questions:
 
 return msg
 }
+
+const saveDraft =
+async(order)=>{
+
+try{
+
+const summary=[]
+
+if(order.gummies){
+
+summary.push(
+`Sea Moss Gummies:
+${order.gummies} ${order.unit}`
+)
+
+if(order.bulkFlavors?.length){
+
+summary.push(
+`Flavors:
+${order.bulkFlavors.join(', ')}`
+)
+
+}
+
+if(order.bulkFlavorNote){
+
+summary.push(
+`Ratio:
+${order.bulkFlavorNote}`
+)
+
+}
+
+}
+
+if(order.dry){
+
+summary.push(
+`Gold Sea Moss:
+${order.dry} ${order.unit}`
+)
+
+}
+
+if(order.soap){
+
+summary.push(
+`Soap:
+${order.soap} bars`
+)
+
+if(order.soapScents?.length){
+
+summary.push(
+`Scents:
+${order.soapScents.join(', ')}`
+)
+
+}
+
+if(order.soapMixNote){
+
+summary.push(
+`Ratio:
+${order.soapMixNote}`
+)
+
+}
+
+}
+
+if(order.jar){
+
+summary.push(
+`Jar:
+${order.jar} jars`
+)
+
+if(order.jarFlavors?.length){
+
+summary.push(
+`Flavors:
+${order.jarFlavors.join(', ')}`
+)
+
+}
+
+if(order.jarLid){
+
+summary.push(
+`Lid:
+${order.jarLid}`
+)
+
+}
+
+}
+
+if(order.pouch){
+
+summary.push(
+`Pouch:
+${order.pouch} pouches`
+)
+
+if(order.pouchFlavors?.length){
+
+summary.push(
+`Flavors:
+${order.pouchFlavors.join(', ')}`
+)
+
+}
+
+if(order.pouchColor){
+
+summary.push(
+`Color:
+${order.pouchColor}`
+)
+
+}
+
+}
+
+summary.push(
+
+`Total:
+US$${order.total}`
+
+)
+
+const orderSummary=
+
+summary.join(
+
+'\n\n'
+
+)
+
+const {
+
+data,
+
+error
+
+}=
+
+await supabase
+
+.from(
+'orders'
+)
+
+.insert([
+
+{
+
+customer_name:
+form.name,
+
+phone:
+form.phone,
+
+status:
+'draft',
+
+total:
+order.total,
+
+currency:
+order.currency,
+
+order_data:
+order,
+
+order_summary:
+orderSummary
+
+}
+
+])
+
+.select()
+
+.single()
+
+
+if(
+error
+){
+
+console.log(
+'DRAFT SAVE ERROR',
+error
+)
+
+return null
+
+}
+
+console.log(
+'DRAFT CREATED',
+data
+)
+
+if(data){
+
+localStorage.setItem(
+'orderDraftId',
+
+String(
+data.id
+)
+
+)
+
+}
+
+return data
+
+}
+catch(e){
+
+console.log(
+'DRAFT ERROR',
+e
+)
+
+return null
+
+}
+
+}
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -2353,21 +2597,20 @@ className="w-full p-3 rounded-xl border"
 />
 
 
-
 <input
-placeholder="Country"
-value={form.country}
+placeholder="WhatsApp Number"
+
+value={form.phone}
+
 onChange={(e)=>
 setForm({
 ...form,
-country:e.target.value
+phone:e.target.value
 })
 }
+
 className="w-full p-3 rounded-xl border"
 />
-
-
-
 
 
 </div>
@@ -2473,7 +2716,7 @@ Message with copied order
 
 type="button"
 
-onClick={()=>{
+onClick={async()=>{
 
 const order={
 
@@ -2559,10 +2802,66 @@ localStorage.setItem(
 JSON.stringify(order)
 )
 
-window.location.href='/checkout'
+const draft=
+
+await saveDraft(
+order
+)
+
+console.log(
+'DRAFT RESULT:',
+draft
+)
+
+if(
+!draft
+){
+
+alert(
+'Draft save failed'
+)
+
+return
+
+}
+
+localStorage.setItem(
+
+'checkoutCustomer',
+
+JSON.stringify({
+
+name:
+form.name,
+
+email:
+form.email,
+
+phone:
+form.phone,
+
+country:
+form.country,
+
+address:
+form.address,
+
+city:
+form.city,
+
+state:
+form.state
+
+})
+
+)
+
+window.location.href=
+'/checkout'
+
+
 
 }}
-
 className="
 w-full
 rounded-full

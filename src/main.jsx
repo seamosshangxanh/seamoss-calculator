@@ -5,6 +5,7 @@ import './index.css'
 
 import App from './App.jsx'
 import Checkout from './Checkout.jsx'
+import ThankYou from './ThankYou.jsx'
 
 import {
 PayPalScriptProvider
@@ -60,6 +61,11 @@ element={<App/>}
 <Route
 path="/checkout"
 element={<Checkout/>}
+/>
+
+<Route
+path="/thank-you"
+element={<ThankYou/>}
 />
 
 </Routes>
